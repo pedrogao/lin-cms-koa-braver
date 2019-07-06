@@ -1,0 +1,7 @@
+{
+  "name": "lin",
+  "private": false,
+  "devDependencies": {
+    "lerna": "^3.15.0"
+  }
+}
