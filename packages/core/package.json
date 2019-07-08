@@ -10,6 +10,12 @@
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
+    "dayjs": "^1.8.14",
+    "egg-logger": "^2.4.1",
+    "lodash": "^4.17.11",
     "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.12"
   }
 }

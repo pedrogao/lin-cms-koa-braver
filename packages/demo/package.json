@@ -10,8 +10,10 @@
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
-    "@pedro/starter": "0.0.1",
-    "@pedro/core": "0.0.1"
+    "@pedro/core": "0.0.1",
+    "@pedro/starter": "0.0.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^12.0.12"
+  }
 }
