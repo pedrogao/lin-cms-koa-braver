@@ -1,10 +1,9 @@
 import * as path from 'path';
 import { merge, get, has, set } from 'lodash';
 
-// TODO: 添加环境变量配置支持
 /**
  * Config类的实现
- * 帮助应用从文件中读取配置，目前仅支持从js文件中读取配置
+ * 帮助应用从文件中读取配置，目前仅支持从js文件中读取配置，加入json，yml
  *
  * ```js
  * const config = new Config();
@@ -26,6 +25,11 @@ export class Config {
    * 存储配置的容器
    */
   private store: Object = {};
+
+  /**
+   * 默认环境变量的前缀为LIN
+   */
+  private _prefix: string = 'lin';
 
   /**
    * 获取单个的配置项
@@ -103,5 +107,43 @@ export class Config {
   public getConfigFromObj(obj: any) {
     this.store = merge(this.store, obj);
   }
-}
 
+  /**
+   * 判断是何种环境变量，默认为''
+   */
+  public getEnv() {
+    Object.keys(process.env).forEach(key => {
+      if (key === `${this.prefix}_env`) {
+        return process.env[key];
+      }
+    });
+  }
+
+  /**
+   * 从环境变量里面读取配置，只读取以 @prefix 开头的变量名
+   */
+  public getConfigFromEnv() {
+    const envs = {};
+    Object.keys(process.env).forEach(key => {
+      if (key.startsWith(this.prefix)) {
+        const parts = key.split('_');
+        if (parts.length === 2) {
+          set(envs, parts[1], process.env[key]);
+        } else if (parts.length > 2) {
+          let k = key.replace(`${this.prefix}_`, '');
+          k = k.replace('_', '.');
+          set(envs, k, process.env[key]);
+        }
+      }
+    });
+    this.store = merge(this.store, envs);
+  }
+
+  public get prefix(): string {
+    return this._prefix;
+  }
+
+  public set prefix(value: string) {
+    this._prefix = value;
+  }
+}
