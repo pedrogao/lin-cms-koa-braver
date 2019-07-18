@@ -109,14 +109,14 @@ export class Config {
   }
 
   /**
-   * 判断是何种环境变量，默认为''
+   * 判断是何种环境变量，默认为 undefined
    */
   public getEnv() {
-    Object.keys(process.env).forEach(key => {
-      if (key === `${this.prefix}_env`) {
+    for (const key of Object.keys(process.env)) {
+      if (key.toLowerCase() === `${this.prefix}_env`) {
         return process.env[key];
       }
-    });
+    }
   }
 
   /**
