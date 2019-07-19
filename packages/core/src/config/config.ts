@@ -114,12 +114,8 @@ export class Config {
    * 判断是何种环境变量，默认为 debug
    */
   public getEnv(): string {
-    // for (const key of Object.keys(process.env)) {
-    //   if (key.toLowerCase() === `${this.prefix}_env`) {
-    //     return process.env[key];
-    //   }
-    // }
-    return this.getItem(this.prefix + this.envSuffix).toLowerCase();
+    const env = this.getItem(this.prefix + this.envSuffix);
+    return env && env.toLowerCase();
   }
 
   /**
