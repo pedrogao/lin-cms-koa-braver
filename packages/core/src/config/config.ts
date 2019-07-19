@@ -31,6 +31,8 @@ export class Config {
    */
   private _prefix: string = 'lin';
 
+  private envSuffix: string = '_ENV';
+
   /**
    * 获取单个的配置项
    * ```js
@@ -109,21 +111,31 @@ export class Config {
   }
 
   /**
-   * 判断是何种环境变量，默认为 undefined
+   * 判断是何种环境变量，默认为 debug
    */
-  public getEnv() {
-    for (const key of Object.keys(process.env)) {
-      if (key.toLowerCase() === `${this.prefix}_env`) {
-        return process.env[key];
-      }
-    }
+  public getEnv(): string {
+    // for (const key of Object.keys(process.env)) {
+    //   if (key.toLowerCase() === `${this.prefix}_env`) {
+    //     return process.env[key];
+    //   }
+    // }
+    return this.getItem(this.prefix + this.envSuffix).toLowerCase();
+  }
+
+  /**
+   * 判断是否为debug环境
+   */
+  public isDebug(): boolean {
+    return this.getEnv() === 'debug';
   }
 
   /**
    * 从环境变量里面读取配置，只读取以 @prefix 开头的变量名
    */
   public getConfigFromEnv() {
-    const envs = {};
+    const envs = {
+      [this._prefix + this.envSuffix]: 'debug'
+    };
     Object.keys(process.env).forEach(key => {
       if (key.startsWith(this.prefix)) {
         const parts = key.split('_');

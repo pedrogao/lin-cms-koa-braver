@@ -32,6 +32,7 @@ class Config {
          * 默认环境变量的前缀为LIN
          */
         this._prefix = 'lin';
+        this.envSuffix = '_ENV';
     }
     /**
      * 获取单个的配置项
@@ -106,20 +107,29 @@ class Config {
         this.store = lodash_1.merge(this.store, obj);
     }
     /**
-     * 判断是何种环境变量，默认为''
+     * 判断是何种环境变量，默认为 debug
      */
     getEnv() {
-        Object.keys(process.env).forEach(key => {
-            if (key.toLowerCase() === `${this.prefix}_env`) {
-                return process.env[key];
-            }
-        });
+        // for (const key of Object.keys(process.env)) {
+        //   if (key.toLowerCase() === `${this.prefix}_env`) {
+        //     return process.env[key];
+        //   }
+        // }
+        return this.getItem(this.prefix + this.envSuffix).toLowerCase();
+    }
+    /**
+     * 判断是否为debug环境
+     */
+    isDebug() {
+        return this.getEnv() === 'debug';
     }
     /**
      * 从环境变量里面读取配置，只读取以 @prefix 开头的变量名
      */
     getConfigFromEnv() {
-        const envs = {};
+        const envs = {
+            [this._prefix + this.envSuffix]: 'debug'
+        };
         Object.keys(process.env).forEach(key => {
             if (key.startsWith(this.prefix)) {
                 const parts = key.split('_');

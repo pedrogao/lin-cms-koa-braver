@@ -26,6 +26,7 @@ export declare class Config {
      * 默认环境变量的前缀为LIN
      */
     private _prefix;
+    private envSuffix;
     /**
      * 获取单个的配置项
      * ```js
@@ -54,7 +55,7 @@ export declare class Config {
      * ```
      * @param key 配置项的路径
      */
-    hasItem(key: string): any;
+    hasItem(key: string): boolean;
     /**
      * 通过硬编码的方式设置配置项
      *
@@ -86,9 +87,13 @@ export declare class Config {
      */
     getConfigFromObj(obj: any): void;
     /**
-     * 判断是何种环境变量，默认为''
+     * 判断是何种环境变量，默认为 debug
      */
-    getEnv(): void;
+    getEnv(): string;
+    /**
+     * 判断是否为debug环境
+     */
+    isDebug(): boolean;
     /**
      * 从环境变量里面读取配置，只读取以 @prefix 开头的变量名
      */
