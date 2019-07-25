@@ -1,6 +1,6 @@
 {
   "name": "@pedro/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "core of lin-cms-koa",
   "main": "lib/index.js",
   "scripts": {
