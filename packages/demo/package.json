@@ -4,14 +4,24 @@
   "description": "demo of lin-cms-koa",
   "main": "lib/index.js",
   "scripts": {
-    "tsc": "tsc"
+    "dev": "node app/starter.js"
   },
-  "keywords": [],
+  "keywords": [
+    "lin",
+    "cms",
+    "koa"
+  ],
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
-    "@pedro/core": "0.0.1",
-    "@pedro/starter": "0.0.1"
+    "@koa/cors": "^2.2.3",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-mount": "^4.0.0",
+    "koa-static": "^5.0.0",
+    "koa-router": "^7.4.0",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.3.5"
   },
   "devDependencies": {
     "@types/node": "^12.0.12"
