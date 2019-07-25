@@ -1,6 +1,10 @@
 {
   "name": "lin",
   "private": false,
+  "scripts": {
+    "dev": "lerna run dev --scope=@pedro/demo",
+    "new-version": "lerna version --conventional-commits --yes"
+  },
   "devDependencies": {
     "lerna": "^3.15.0"
   }
