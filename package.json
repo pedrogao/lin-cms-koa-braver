@@ -3,7 +3,9 @@
   "private": false,
   "scripts": {
     "dev": "lerna run dev --scope=@pedro/demo",
-    "new-version": "lerna version --conventional-commits --yes"
+    "tsc:core": "lerna run tsc --scope=@pedro/core",
+    "new-version": "lerna version --conventional-commits --yes",
+    "diff": "lerna diff"
   },
   "devDependencies": {
     "lerna": "^3.15.0"

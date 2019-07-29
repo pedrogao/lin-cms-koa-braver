@@ -1,1 +1,1 @@
-export declare function hello(name: string): string;
+export * from './config';

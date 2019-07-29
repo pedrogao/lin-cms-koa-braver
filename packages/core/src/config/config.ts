@@ -94,7 +94,6 @@ export class Config {
   public getConfigFromFile(filepath: string) {
     const baseDir = process.cwd();
     const mod = require(path.resolve(baseDir, filepath));
-    // const conf = get(mod, "default");
     this.store = merge(this.store, mod);
   }
 
