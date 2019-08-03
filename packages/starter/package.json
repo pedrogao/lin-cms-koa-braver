@@ -1,6 +1,6 @@
 {
   "name": "@pedro/starter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "starter of lin-cms-koa",
   "main": "lib/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
-    "@pedro/core": "^0.1.0",
+    "@pedro/core": "^0.2.0",
     "typescript": "^3.5.2"
   },
   "devDependencies": {
