@@ -2,7 +2,7 @@
   "name": "@pedro/demo",
   "version": "0.1.0",
   "description": "demo of lin-cms-koa",
-  "main": "lib/index.js",
+  "main": "app/starter.js",
   "scripts": {
     "dev": "nodemon"
   },

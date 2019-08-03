@@ -16,8 +16,14 @@ function indexPage (app) {
       Lin <br/><span style="font-size:30px">心上无垢，林间有风。</span></p></div> `;
   });
 }
+
+
 app.use(router.routes())
 app.use(router.allowedMethods())
+
+require('./models/user')
+require('./models/auth')
+require('./models/group')
 
 async function createApp () {
   indexPage(app);
