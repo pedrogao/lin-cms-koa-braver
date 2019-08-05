@@ -8,6 +8,8 @@ import { config } from '../config';
 // import { extendedValidator } from './extended-validator';
 import { __decorate, __metadata } from 'tslib';
 
+import { ObjOptions } from '../types'
+
 export const isUndefined = (obj: any): obj is undefined =>
   typeof obj === 'undefined';
 
@@ -168,11 +170,6 @@ export function decorateProp(decorators, type, target, key) {
     target,
     key
   );
-}
-
-export interface ObjOptions {
-  prefix?: string;
-  filter?: (key: any) => boolean;
 }
 
 /**

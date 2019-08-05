@@ -1,15 +1,6 @@
 import assert from 'assert';
 import { isInteger } from 'lodash';
-
-/**
- * HttpException 类构造函数的参数接口
- */
-export interface Exception {
-  code?: number;
-  msg?: any;
-  errorCode?: number;
-}
-
+import { Exception } from '../types'
 /**
  * HttpException 是lin中所有其他异常的基类
  *
