@@ -3,6 +3,7 @@
  * 实现原理与werkzeug的原理基本一样
  */
 import crypto from 'crypto';
+import { Option } from '../types'
 
 let saltChars =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -42,12 +43,6 @@ function generateHash(
   } catch (e) {
     throw new Error('Invalid message digest algorithm');
   }
-}
-
-export interface Option {
-  algorithm?: string;
-  saltLength?: number;
-  iterations?: number;
 }
 
 /**
