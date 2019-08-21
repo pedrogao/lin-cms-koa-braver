@@ -1,3 +1,5 @@
+import { Request } from 'koa'
+
 /**
  * HttpException 类构造函数的参数接口
  */
