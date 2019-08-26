@@ -11,6 +11,7 @@
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
+    "async-busboy": "^0.7.0",
     "dayjs": "^1.8.14",
     "egg-logger": "^2.4.1",
     "koa": "^2.7.0",

@@ -19,3 +19,12 @@ export interface ObjOptions {
   prefix?: string;
   filter?: (key: any) => boolean;
 }
+
+// 多文件配置
+export interface MulOpts {
+  singleLimit?: number;
+  totalLimit?: number;
+  fileNums?: number;
+  include?: string[];
+  exclude?: string[];
+}

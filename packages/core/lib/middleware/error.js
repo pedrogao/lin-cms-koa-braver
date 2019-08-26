@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const exception_1 = require("../exception");
+const http_exception_1 = require("../exception/http-exception");
 const extend_1 = require("../extend");
 const config_1 = require("../config");
 /**
@@ -8,7 +8,7 @@ const config_1 = require("../config");
  */
 exports.error = (err, ctx) => {
     ctx.type = 'application/json';
-    if (err instanceof exception_1.HttpException) {
+    if (err instanceof http_exception_1.HttpException) {
         ctx.status = err.code || 500;
         ctx.body = JSON.stringify({
             error_code: err.errorCode,

@@ -1,4 +1,4 @@
-import { config, log , error} from '@pedro/core'
+import { config, log , error, multipart} from '@pedro/core'
 import Application from 'koa';
 import { Lin } from'./core'
 const Koa = require('koa');
@@ -81,10 +81,11 @@ async function createApp() {
   app.use(log);
   app.on('error', error);
   indexPage(app)
+  multipart(app);
   app
   .use(router.routes())
   .use(router.allowedMethods());
   return app
 }
 
-export { createApp }
+export { createApp, router }

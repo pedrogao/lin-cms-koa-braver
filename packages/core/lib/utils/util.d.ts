@@ -1,3 +1,4 @@
+import { ObjOptions } from '../types';
 export declare const isUndefined: (obj: any) => obj is undefined;
 export declare const isFunction: (fn: any) => boolean;
 export declare const isObject: (fn: any) => fn is object;
@@ -58,10 +59,6 @@ export declare function unsets(obj: any, props: Array<string>): void;
  * ```
  */
 export declare function decorateProp(decorators: any, type: any, target: any, key: any): any;
-export interface ObjOptions {
-    prefix?: string;
-    filter?: (key: any) => boolean;
-}
 /**
  * 获取一个实例的所有方法
  * @param obj 对象实例
