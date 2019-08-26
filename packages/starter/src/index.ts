@@ -2,7 +2,8 @@
 'use strict';
 
 import { config } from '@pedro/core'
-import { createApp } from './app'
+import { createApp, router } from './app'
+const LocalUploader = require('./extensions/file/localUploader')
 /**
  * 启动Koa实例
  * @param port 启动端口
@@ -15,4 +16,4 @@ const run = async () => {
   })
 }
 
-export {run}
+export {run, LocalUploader, router}

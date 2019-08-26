@@ -1,8 +1,4 @@
-export interface Option {
-    algorithm?: string;
-    saltLength?: number;
-    iterations?: number;
-}
+import { Option } from '../types';
 /**
  * 生成密文密码
  * @param password 密码
