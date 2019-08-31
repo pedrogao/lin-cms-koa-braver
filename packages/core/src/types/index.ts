@@ -28,3 +28,9 @@ export interface MulOpts {
   include?: string[];
   exclude?: string[];
 }
+// lin-router 路由元信息
+export interface Meta {
+  auth?: string;
+  module?: string;
+  mount?: boolean;
+}

@@ -8,9 +8,9 @@ const mount = require('koa-mount');
 const serve = require('koa-static');
 const fs = require('fs');
 const path = require('path')
-const Router = require('koa-router')
+import { LinRouter }  from '@pedro/core'
 
-const router = new Router()
+const router = new LinRouter()
 
 /**
  * 首页
