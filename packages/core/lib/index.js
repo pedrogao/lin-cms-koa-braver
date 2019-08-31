@@ -7,3 +7,4 @@ tslib_1.__exportStar(require("./middleware/index"), exports);
 tslib_1.__exportStar(require("./utils/index"), exports);
 tslib_1.__exportStar(require("./extend/index"), exports);
 tslib_1.__exportStar(require("./file"), exports);
+tslib_1.__exportStar(require("./router/lin-router"), exports);

@@ -22,3 +22,8 @@ export interface MulOpts {
     include?: string[];
     exclude?: string[];
 }
+export interface Meta {
+    auth?: string;
+    module?: string;
+    mount?: boolean;
+}
