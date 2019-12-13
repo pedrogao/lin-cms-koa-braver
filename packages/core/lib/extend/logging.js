@@ -12,7 +12,7 @@ let options = {
 };
 const logConf = config_1.config.getItem('log');
 // 融合配置
-options = Object.assign({}, options, logConf);
+options = Object.assign(Object.assign({}, options), logConf);
 exports.logger = new egg_logger_1.Logger({});
 // 如果file开启，则打开，否则关闭
 if (options.file) {

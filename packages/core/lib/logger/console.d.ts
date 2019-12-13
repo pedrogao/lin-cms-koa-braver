@@ -11,7 +11,7 @@ export declare class ConsoleTransport extends Transport {
      * - {Array} [stderrLevel = ERROR] - output to stderr level, must higher than options.level
      */
     constructor(options: any);
-    readonly defaults: any;
+    get defaults(): any;
     /**
      * output log, see {@link Transport#log}
      * if stderrLevel presents, will output log to stderr

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const async_busboy_1 = tslib_1.__importDefault(require("async-busboy"));
-const http_exception_1 = require("../exception/http-exception");
+const exception_1 = require("../exception/");
 const path_1 = require("path");
 const config_1 = require("../config");
 /**
@@ -51,15 +51,15 @@ exports.multipart = (app) => {
                 file = await filePromise;
             }
             catch (error) {
-                throw new http_exception_1.HttpException({ msg: '文件体损坏，无法读取' });
+                throw new exception_1.HttpException({ msg: '文件体损坏，无法读取' });
             }
             const ext = path_1.extname(file.filename);
             if (!checkFileExtension(ext, opts && opts.include, opts && opts.exclude)) {
-                throw new http_exception_1.FileExtensionException({ msg: `不支持类型为${ext}的文件` });
+                throw new exception_1.FileExtensionException({ msg: `不支持类型为${ext}的文件` });
             }
             const { valid, conf } = checkSingleFileSize(file.size, opts && opts.singleLimit);
             if (!valid) {
-                throw new http_exception_1.FileTooLargeException({
+                throw new exception_1.FileTooLargeException({
                     msg: `${file.filename}大小不能超过${conf}字节`
                 });
             }
@@ -69,11 +69,11 @@ exports.multipart = (app) => {
         }
         const { valid, conf } = checkFileNums(files.length, opts && opts.fileNums);
         if (!valid) {
-            throw new http_exception_1.FileTooManyException({ msg: `上传文件数量不能超过${conf}` });
+            throw new exception_1.FileTooManyException({ msg: `上传文件数量不能超过${conf}` });
         }
         const { valid: valid1, conf: conf1 } = checkTotalFileSize(totalSize, opts && opts.totalLimit);
         if (!valid1) {
-            throw new http_exception_1.FileTooLargeException({ msg: `总文件体积不能超过${conf1}` });
+            throw new exception_1.FileTooLargeException({ msg: `总文件体积不能超过${conf1}` });
         }
         this.request.fields = fields;
         return files;

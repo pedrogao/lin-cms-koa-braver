@@ -14,7 +14,7 @@ export declare class FileTransport extends Transport {
      * - {String} [level = INFO] - log level
      */
     constructor(options: any);
-    readonly defaults: any;
+    get defaults(): any;
     /**
      * reload file stream
      */
@@ -51,7 +51,7 @@ export declare class FileTransport extends Transport {
      * transport is writable
      * @return {Boolean} writable
      */
-    readonly writable: boolean | null;
+    get writable(): boolean | null;
     /**
      * create stream
      * @return {Stream} return writeStream

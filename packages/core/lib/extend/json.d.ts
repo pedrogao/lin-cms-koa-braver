@@ -8,4 +8,4 @@ import Application from 'koa';
  *
  * @param app app实例
  */
-export declare const json: (app: Application<any, {}>) => void;
+export declare const json: (app: Application<Application.DefaultState, Application.DefaultContext>) => void;

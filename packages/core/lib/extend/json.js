@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("../utils");
-const index_1 = require("../exception/index");
+const exception_1 = require("../exception");
 const lodash_1 = require("lodash");
 /**
  * json序列化扩展
@@ -20,7 +20,7 @@ exports.json = (app) => {
         this.type = 'application/json';
         utils_1.unsets(obj, hide);
         let data = Object.create(null);
-        if (obj instanceof index_1.HttpException) {
+        if (obj instanceof exception_1.HttpException) {
             transform(obj, data);
             lodash_1.set(data, 'url', this.request.url);
             this.status = obj.code;

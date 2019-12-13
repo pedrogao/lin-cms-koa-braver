@@ -1,6 +1,6 @@
 import Application from 'koa';
 import { toLine, unsets } from '../utils';
-import { HttpException } from '../exception/index';
+import { HttpException } from '../exception';
 import { get, set } from 'lodash';
 /**
  * json序列化扩展

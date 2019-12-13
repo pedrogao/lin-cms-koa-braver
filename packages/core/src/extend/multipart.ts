@@ -1,7 +1,7 @@
 import Application from 'koa'
 import { MulOpts } from '../types'
 import asyncBusboy from 'async-busboy';
-import { HttpException,FileExtensionException, FileTooLargeException,FileTooManyException } from '../exception/http-exception'
+import { HttpException,FileExtensionException, FileTooLargeException,FileTooManyException } from '../exception/'
 import { extname } from 'path';
 import { config } from '../config';
 /**

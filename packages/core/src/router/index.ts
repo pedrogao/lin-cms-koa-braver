@@ -1,6 +1,6 @@
 import  Router, {IRouterOptions,IMiddleware } from 'koa-router'
 import { assert } from '../utils';
-import { Meta } from '../types/index'
+import { Meta } from '../types'
 
 export const routeMetaInfo = new Map()
 /**

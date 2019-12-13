@@ -1,6 +1,57 @@
-const sequelize = require('../core/db')
-const { Model,Sequelize } = require('sequelize')
+const sequelize = require('../libs/db')
+const { Model, Sequelize } = require('sequelize')
 const { set, get, has, merge } = require('lodash')
+
+class UserIdentity extends Model {
+  
+}
+
+UserIdentity.init(
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    user_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      comment: '用户id'
+    },
+    identity_type: {
+      type: Sequelize.STRING({ length:100 }),
+      allowNull: false,
+      comment: '登录类型（手机号 邮箱 用户名）或第三方应用名称（微信 微博等）'
+    },
+    identifier: {
+      type: Sequelize.STRING({ length:100 }),
+      comment: '标识（手机号 邮箱 用户名或第三方应用的唯一标识）'
+    },
+    credential: {
+      type: Sequelize.STRING({ length:100 }),
+      comment: '密码凭证（站内的保存密码，站外的不保存或保存token）'
+    }
+  },
+  {
+    sequelize,
+    tableName: 'lin_user_identity',
+    modelName: 'user_identity',
+    createdAt: 'create_time',
+    updatedAt: 'update_time',
+    deletedAt: 'delete_time',
+    paranoid: true,
+    getterMethods: {
+      createTime() {
+        // @ts-ignore
+        return new Date(this.getDataValue('create_time')).getTime();
+      },
+      updateTime() {
+        // @ts-ignore
+        return new Date(this.getDataValue('update_time')).getTime();
+      }
+    }
+  }
+)
 
 class User extends Model {
 
@@ -77,7 +128,7 @@ User.init({
       // @ts-ignore
       return join(config.getItem('siteDomain', 'assets/', this.getDataValue('avatar')))
     }
-    
+
   },
   admin: {
     type: Sequelize.TINYINT,
@@ -111,28 +162,20 @@ User.init({
   }
 },{
   sequelize,
-  tableName: 'lin_user',
   modelName: 'user',
+  tableName: 'lin_user',
   createdAt: 'create_time',
   updatedAt: 'update_time',
   deletedAt: 'delete_time',
-  paranoid: true
-  // getterMethods: {
-  //   isAdmin() {
-  //     // @ts-ignore
-  //     return this.getDataValue('admin') === UserAdmin.ADMIN;
-  //   },
-  //   isActive() {
-  //     // @ts-ignore
-  //     return this.getDataValue('active') === UserActive.ACTIVE;
-  //   },
-  //   createTime() {
-  //     // @ts-ignore
-  //     return dayjs(this.getDataValue('create_time')).unix() * 1000;
-  //   },
-  //   updateTime() {
-  //     // @ts-ignore
-  //     return dayjs(this.getDataValue('update_time')).unix() * 1000;
-  //   }
-  // }
+  paranoid: true,
+  getterMethods: {
+    createTime() {
+      // @ts-ignore
+      return new Date(this.getDataValue('create_time')).getTime();
+    },
+    updateTime() {
+      // @ts-ignore
+      return new Date(this.getDataValue('update_time')).getTime();
+    }
+  }
 })
