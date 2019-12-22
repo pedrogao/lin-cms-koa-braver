@@ -14,4 +14,4 @@ export declare const logger: Logger<{}>;
  *
  * @param app app实例
  */
-export declare const logging: (app: Application<any, {}>) => void;
+export declare const logging: (app: Application<Application.DefaultState, Application.DefaultContext>) => void;

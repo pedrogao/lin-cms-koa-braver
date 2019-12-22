@@ -1,13 +1,19 @@
-'use strict';
+
 
 const Koa = require('koa');
-const Router = require('koa-router')
+const KoaBodyParser = require('koa-bodyparser');
+const cors = require('@koa/cors');
+const mount = require('koa-mount');
+const serve = require('koa-static');
+const { config } = require('@pedro/core')
 
-const app = new Koa();
-const router = new Router()
+const Router = require('koa-router');
 
+/**
+ * 首页
+ */
 function indexPage (app) {
-  router.get('/', async ctx => {
+  app.context.manager.loader.mainRouter.get('/', async ctx => {
     ctx.type = 'html';
     ctx.body = `<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor:
       pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family:
@@ -18,16 +24,51 @@ function indexPage (app) {
 }
 
 
-app.use(router.routes())
-app.use(router.allowedMethods())
 
-require('./models/user')
-require('./models/auth')
-require('./models/group')
+/**
+ * 跨域支持
+ * @param app koa实例
+ */
+function applyCors (app) {
+  app.use(cors());
+}
 
-async function createApp () {
-  indexPage(app);
-  return app;
+/**
+ * 解析Body参数
+ * @param app koa实例
+ */
+function applyBodyParse (app) {
+  // 参数解析
+  app.use(KoaBodyParser());
+}
+
+/**
+ * 静态资源服务
+ * @param app koa实例
+ * @param prefix 静态资源存放相对路径
+ */
+function applyStatic (app, prefix = '/assets') {
+  const assetsDir = config.getItem('file.storeDir', 'app/static');
+  app.use(mount(prefix, serve(assetsDir)));
+}
+
+
+/**
+ * 初始化Koa实例
+ */
+async function createApp() {
+  const app = new Koa();
+  applyBodyParse(app);
+  applyCors(app);
+  applyStatic(app);
+  const { log, error, Lin, multipart } = require('@pedro/core');
+  app.use(log);
+  app.on('error', error);
+  const lin = new Lin();
+  await lin.initApp(app, true);
+  indexPage(app)
+  multipart(app);
+  return app
 }
 
 module.exports = { createApp };

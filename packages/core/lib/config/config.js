@@ -92,7 +92,6 @@ class Config {
     getConfigFromFile(filepath) {
         const baseDir = process.cwd();
         const mod = require(path.resolve(baseDir, filepath));
-        // const conf = get(mod, "default");
         this.store = lodash_1.merge(this.store, mod);
     }
     /**

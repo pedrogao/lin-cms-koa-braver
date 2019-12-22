@@ -98,5 +98,6 @@ export declare class Config {
      * 从环境变量里面读取配置，只读取以 @prefix 开头的变量名
      */
     getConfigFromEnv(): void;
-    prefix: string;
+    get prefix(): string;
+    set prefix(value: string);
 }

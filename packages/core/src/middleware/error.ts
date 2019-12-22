@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { HttpException } from '../exception';
+import { HttpException } from '../exception/http-exception';
 import { logger } from '../extend';
 import { config } from '../config';
 /**
@@ -27,3 +27,4 @@ export const error = (err: Error, ctx: Context) => {
     }
   }
 };
+

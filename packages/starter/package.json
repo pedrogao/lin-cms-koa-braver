@@ -10,8 +10,16 @@
   "author": "pedro",
   "license": "MIT",
   "dependencies": {
+    "@koa/cors": "^3.0.0",
     "@pedro/core": "^0.2.0",
+    "@types/koa": "^2.0.49",
     "@types/lodash": "^4.14.136",
+    "consola": "^2.10.1",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-mount": "^4.0.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "lodash": "^4.17.15",
     "typescript": "^3.5.2"
   },
