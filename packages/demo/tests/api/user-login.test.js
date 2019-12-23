@@ -1,8 +1,7 @@
-require('../helper/initial');
 import request from 'supertest';
 import { createApp } from '../../app/app';
-import { db } from '../../app/libs/db';
-import { saveTokens } from '../helper/token';
+import { sequelize } from '../../app/libs/db';
+// import { saveTokens } from '../helper/token';
 
 describe('user-login.test.js', () => {
   let app;
@@ -13,7 +12,7 @@ describe('user-login.test.js', () => {
 
   afterAll(() => {
     setTimeout(() => {
-      db.close();
+      sequelize.close();
     }, 500);
   });
 

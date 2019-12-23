@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize')
+import { Sequelize } from 'sequelize'
 const { config } = require('@pedro/core');
 
 /**
@@ -24,12 +24,12 @@ const options = config.getItem('db', {});
 /**
  * 全局的 Sequelize 实例
  */
-const sequelize = new Sequelize(database,username,password,{
+export const sequelize = new Sequelize(database,username,password,{
   ...options
-})
+});
 
 sequelize.sync({
-  force: true
-})
+  force: false
+});
 
-export default sequelize
+module.exports = sequelize;

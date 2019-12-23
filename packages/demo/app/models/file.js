@@ -1,4 +1,4 @@
-import sequelize from '../libs/db'
+import { sequelize } from '../libs/db'
 const { Model,Sequelize } = require('sequelize')
 
 class File extends Model {
@@ -43,6 +43,7 @@ File.init(
     }
   },
   {
+    sequelize,
     tableName: 'lin_file',
     modelName: 'file',
     createdAt: 'create_time',

@@ -1,3 +1,5 @@
+import { NotFound } from "@pedro/core";
+
 const sequelize = require('../libs/db')
 const { Model, Sequelize } = require('sequelize')
 const { set, get, has, merge } = require('lodash')
@@ -11,6 +13,9 @@ class UserIdentity extends Model {
         identifier: username,
         delete_time: null
     }})
+    if (!user) {
+      throw new NotFound({msg: '用户不存在', errorCode: 10020})
+    }
     
   }
 }

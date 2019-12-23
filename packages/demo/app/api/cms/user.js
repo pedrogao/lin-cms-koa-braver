@@ -1,6 +1,4 @@
-import {
-  LinRouter
-} from '@pedro/core';
+const { LinRouter } =require('@pedro/core');
 
 
 import {
@@ -15,7 +13,7 @@ import { UserModel, UserIdentityModel } from '../../models/user'
 
 // const { UserDao } = require('../../dao/user');
 
-const user = new LinRouter({
+export const user = new LinRouter({
   prefix: '/cms/user'
 });
 
@@ -40,3 +38,4 @@ user.linPost(
     });
   }
 );
+

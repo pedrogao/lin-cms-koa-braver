@@ -35,10 +35,10 @@ export class LinValidator {
    * @param ctx koa context
    * @param alias 别名
    */
-  async validate(ctx: Context, alias?: {}) {
+  async validate(ctx: any, alias?: {}) {
     this.alias = alias;
     this.data = {
-      body: ctx.body,
+      body: ctx.request.body,
       query: ctx.request.query,
       path: ctx.params,
       header: ctx.request.header

@@ -1,4 +1,3 @@
-import { Context } from 'koa';
 /**
  * 强大的校验器
  * 支持optional，支持array，支持nested object
@@ -25,7 +24,7 @@ export declare class LinValidator {
      * @param ctx koa context
      * @param alias 别名
      */
-    validate(ctx: Context, alias?: {}): Promise<this>;
+    validate(ctx: any, alias?: {}): Promise<this>;
     private replace;
     private isOptional;
     private checkRules;
