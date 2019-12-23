@@ -2,8 +2,17 @@ const sequelize = require('../libs/db')
 const { Model, Sequelize } = require('sequelize')
 const { set, get, has, merge } = require('lodash')
 
+const type = 'USERNAME_PASSWORD'
+
 class UserIdentity extends Model {
-  
+  static async verify(username, password) {
+    const user = await this.findOne({where: {
+        identity_type: type,
+        identifier: username,
+        delete_time: null
+    }})
+    
+  }
 }
 
 UserIdentity.init(
@@ -179,3 +188,8 @@ User.init({
     }
   }
 })
+
+module.exports = {
+  UserModel: User,
+  UserIdentityModel: UserIdentity
+}

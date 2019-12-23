@@ -7,7 +7,8 @@ const mount = require('koa-mount');
 const serve = require('koa-static');
 const { config } = require('@pedro/core')
 
-const Router = require('koa-router');
+// const Router = require('koa-router');
+import Router from 'koa-router'
 
 /**
  * 首页

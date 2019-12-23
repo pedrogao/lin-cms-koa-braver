@@ -32,4 +32,4 @@ sequelize.sync({
   force: true
 })
 
-module.exports = sequelize
+export default sequelize

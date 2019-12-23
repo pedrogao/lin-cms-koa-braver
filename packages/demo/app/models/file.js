@@ -1,4 +1,4 @@
-const sequelize = require('../libs/db')
+import sequelize from '../libs/db'
 const { Model,Sequelize } = require('sequelize')
 
 class File extends Model {
