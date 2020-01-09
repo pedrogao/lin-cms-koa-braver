@@ -9,5 +9,6 @@ export * from './file'
 export * from './router/'
 export * from './validator'
 export * from './jwt'
+export * from './loader'
 
 export { Lin } from './core.'

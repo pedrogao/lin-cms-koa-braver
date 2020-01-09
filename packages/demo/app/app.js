@@ -5,7 +5,7 @@ const KoaBodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const mount = require('koa-mount');
 const serve = require('koa-static');
-const { config } = require('@pedro/core')
+const { config, json, logging, success, jwt, Loader } = require('@pedro/core')
 
 // const Router = require('koa-router');
 import Router from 'koa-router'
@@ -14,7 +14,7 @@ import Router from 'koa-router'
  * 首页
  */
 function indexPage (app) {
-  app.context.manager.loader.mainRouter.get('/', async ctx => {
+  app.context.loader.mainRouter.get('/', async ctx => {
     ctx.type = 'html';
     ctx.body = `<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor:
       pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family:
@@ -53,6 +53,34 @@ function applyStatic (app, prefix = '/assets') {
   app.use(mount(prefix, serve(assetsDir)));
 }
 
+/**
+ * json logger 扩展
+ * @param app koa实例
+ */
+function applyDefaultExtends (app) {
+  json(app);
+  logging(app);
+  success(app);
+}
+
+/**
+ * loader 插件管理
+ * @param app koa实例
+ */
+function applyLoader (app) {
+  const pluginPath = config.getItem('pluginPath');
+  const loader = new Loader(pluginPath, app);
+  loader.initLoader()
+}
+
+/**
+ * jwt
+ * @param app koa实例
+ */
+function applyJwt(app) {
+  const secret = config.getItem('secret');
+  jwt.initApp(app, secret);
+}
 
 /**
  * 初始化Koa实例
@@ -65,9 +93,12 @@ async function createApp() {
   const { log, error, Lin, multipart } = require('@pedro/core');
   app.use(log);
   app.on('error', error);
+  applyDefaultExtends(app);
+  applyLoader(app);
+  applyJwt(app);
   const lin = new Lin();
   await lin.initApp(app, true);
-  indexPage(app)
+  indexPage(app);
   multipart(app);
   return app
 }

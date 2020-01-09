@@ -3,9 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const consola_1 = tslib_1.__importDefault(require("consola"));
 const utils_1 = require("./utils");
-const extend_1 = require("./extend");
-const jwt_1 = require("./jwt");
-const loader_1 = require("./loader");
 const router_1 = require("./router");
 const lodash_1 = require("lodash");
 const config_1 = require("./config");
@@ -29,33 +26,12 @@ class Lin {
         this.app = app;
         this.app.context.config = config_1.config;
         utils_1.assert(!!this.app, 'app must not be null');
-        // 2. 默认扩展 json logger
-        this.applyDefaultExtends();
-        // 3. manager
-        this.applyManager();
-        // 5. jwt
-        this.applyJwt();
-        // 6. 挂载默认路由
+        // 挂载默认路由
         mount && this.mount();
-    }
-    applyDefaultExtends() {
-        extend_1.json(this.app);
-        extend_1.logging(this.app);
-        extend_1.success(this.app);
-    }
-    applyManager() {
-        const manager = new Manager();
-        this.manager = manager;
-        const pluginPath = this.app.context.config.getItem('pluginPath');
-        manager.initApp(this.app, pluginPath);
-    }
-    applyJwt() {
-        const secret = this.app.context.config.getItem('secret');
-        jwt_1.jwt.initApp(this.app, secret);
     }
     mount() {
         const pluginRp = new router_1.LinRouter({ prefix: '/plugin' });
-        Object.values(this.manager.plugins).forEach(plugin => {
+        Object.values(this.app.context.plugins).forEach(plugin => {
             consola_1.default.info(`loading plugin: ${lodash_1.get(plugin, 'name')}`);
             const controllers = Object.values(lodash_1.get(plugin, 'controllers'));
             if (controllers.length > 1) {
@@ -89,24 +65,3 @@ class Lin {
     }
 }
 exports.Lin = Lin;
-/**
- * 管理者
- * 管理插件
- */
-class Manager {
-    /**
-     * 初始化
-     * @param app koa app
-     * @param pluginPath 插件路径
-     */
-    initApp(app, pluginPath) {
-        app.context.manager = this;
-        this.loader = new loader_1.Loader(pluginPath, app);
-    }
-    /**
-     * 获取插件
-     */
-    get plugins() {
-        return this.loader.plugins;
-    }
-}

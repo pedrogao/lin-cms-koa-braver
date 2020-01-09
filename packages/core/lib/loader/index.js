@@ -24,6 +24,14 @@ class Loader {
         this.loadPlugins();
     }
     /**
+     * 初始化
+     * 挂载 loader 和 插件
+     */
+    initLoader() {
+        this.app.context.loader = this;
+        this.app.context.plugins = this.plugins;
+    }
+    /**
      * 加载插件
      */
     loadPlugins() {

@@ -11,6 +11,11 @@ export declare class Loader {
     plugins: {};
     constructor(pluginPath: {}, app: Application);
     /**
+     * 初始化
+     * 挂载 loader 和 插件
+     */
+    initLoader(): void;
+    /**
      * 加载插件
      */
     loadPlugins(): void;
