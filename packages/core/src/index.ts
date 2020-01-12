@@ -1,5 +1,6 @@
 
 export * from './config'
+export * from './encrypt'
 export * from './exception/'
 export * from './types'
 export * from './middleware/index'

@@ -1,7 +1,8 @@
+import '../helper/initial'
 import request from 'supertest';
 import { createApp } from '../../app/app';
-import { sequelize } from '../../app/libs/db';
-// import { saveTokens } from '../helper/token';
+import sequelize from '../../app/libs/db';
+import { saveTokens } from '../helper/token';
 
 describe('user-login.test.js', () => {
   let app;
@@ -31,11 +32,11 @@ describe('user-login.test.js', () => {
     const response = await request(app.callback())
       .post('/cms/user/login')
       .send({
-        username: 'pedro',
+        username: 'root',
         password: '147258'
       });
     expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('error_code', 10000);
+    expect(response.body).toHaveProperty('error_code', 10031);
     expect(response.type).toMatch(/json/);
   });
 
@@ -43,7 +44,7 @@ describe('user-login.test.js', () => {
     const response = await request(app.callback())
       .post('/cms/user/login')
       .send({
-        username: 'super',
+        username: 'root',
         password: '123456'
       });
     saveTokens(response.body);

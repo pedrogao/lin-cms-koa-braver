@@ -1,4 +1,4 @@
-const { LinRouter } =require('@pedro/core');
+const { LinRouter, getTokens } =require('@pedro/core');
 
 
 import {

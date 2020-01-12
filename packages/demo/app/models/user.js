@@ -1,4 +1,4 @@
-import { NotFound } from "@pedro/core";
+import { NotFound, verify, AuthFailed } from "@pedro/core";
 
 const sequelize = require('../libs/db')
 const { Model, Sequelize } = require('sequelize')
@@ -14,9 +14,19 @@ class UserIdentity extends Model {
         delete_time: null
     }})
     if (!user) {
-      throw new NotFound({msg: '用户不存在', errorCode: 10020})
+      throw new NotFound({msg: '用户不存在', errorCode: 10021});
     }
-    
+    if (!user.checkPassword(password)) {
+      throw new AuthFailed({msg: '用户名或密码错误', errorCode: 10031});
+    }
+    return user;
+  }
+
+  checkPassword(raw) {
+    if (!this.credential || this.credential === '') {
+      return false;
+    }
+    return verify(raw, this.credential);
   }
 }
 
@@ -69,24 +79,6 @@ UserIdentity.init(
 
 class User extends Model {
 
-  static async verify(nickname, password) {
-    const user = await this.findOne({ where: { nickname, delete_time: null } });
-    // if (!user) {
-    //   throw new NotFound({ msg: '用户不存在' });
-    // }
-    // if (!user.checkPassword(password)) {
-    //   throw new ParametersException({ msg: '密码错误，请输入正确密码' });
-    // }
-    return user;
-  }
-
-  checkPassword(raw) {
-    if (!this.password || this.password === '') {
-      return false;
-    }
-    return verify(raw, this.password);
-  }
-
   resetPassword(newPassword) {
     this.password = newPassword;
   }
@@ -102,15 +94,12 @@ class User extends Model {
   toJSON() {
     const origin = {
       id: this.id,
+      username: this.username,
       nickname: this.nickname,
-      admin: this.admin,
-      active: this.active,
       email: this.email,
       avatar: this.avatar,
-      group_id: this.group_id,
-      // @ts-ignore
+      // group_id: this.group_id,
       create_time: this.createTime,
-      // @ts-ignore
       update_time: this.updateTime
     };
     // if (has(this, 'auths')) {
@@ -129,10 +118,15 @@ User.init({
     primaryKey: true,
     autoIncrement: true
   },
-  nickname: {
+  username: {
     type: Sequelize.STRING({ length: 24 }),
     allowNull: false,
-    unique: true
+    unique: true,
+    comment: '用户名，唯一'
+  },
+  nickname: {
+    type: Sequelize.STRING({ length: 24 }),
+    comment: '用户昵称'
   },
   avatar: {
     // 用户默认生成图像，为null
@@ -142,38 +136,12 @@ User.init({
       // @ts-ignore
       return join(config.getItem('siteDomain', 'assets/', this.getDataValue('avatar')))
     }
-
-  },
-  admin: {
-    type: Sequelize.TINYINT,
-    allowNull: false,
-    defaultValue: 1
-  },
-  active: {
-    type: Sequelize.TINYINT,
-    allowNull: false,
-    defaultValue: 1
   },
   email: {
     type: Sequelize.STRING({ length: 100 }),
     unique: true,
     allowNull: true
   },
-  group_id: {
-    type: Sequelize.INTEGER,
-    allowNull: true
-  },
-  password: {
-    type: Sequelize.STRING({ length: 100 }),
-    set(ps) {
-      // @ts-ignore
-      this.setDataValue('password', generate(ps));
-    },
-    get() {
-      // @ts-ignore
-      return this.getDataValue('password');
-    }
-  }
 },{
   sequelize,
   modelName: 'user',
