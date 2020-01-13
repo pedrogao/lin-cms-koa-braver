@@ -1,6 +1,7 @@
 import Application from 'koa';
 import { VerifyOptions, SignOptions } from 'jsonwebtoken';
 import { RouterContext } from 'koa-router';
+import { TokenType } from '../utils';
 /**
  * 令牌类，提供令牌的生成和解析功能
  *
@@ -91,6 +92,12 @@ declare function getTokens(user: any): {
     accessToken: any;
     refreshToken: any;
 };
+/**
+ * 解析请求头
+ * @param ctx koa 的context
+ * @param type 令牌的类型
+ */
+declare function parseHeader(ctx: RouterContext, type?: TokenType): any;
 declare function checkUserIsActive(user: any): void;
 /**
  * 守卫函数，用户登陆即可访问
@@ -108,8 +115,4 @@ declare function refreshTokenRequiredWithUnifyException(ctx: RouterContext, next
  * 守卫函数，用于权限组鉴权
  */
 declare function groupRequired(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
-/**
- * 守卫函数，非超级管理员不可访问
- */
-declare function adminRequired(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
-export { jwt, getTokens, loginRequired, groupRequired, adminRequired, refreshTokenRequired, refreshTokenRequiredWithUnifyException, checkUserIsActive };
+export { jwt, getTokens, loginRequired, groupRequired, parseHeader, refreshTokenRequired, refreshTokenRequiredWithUnifyException, checkUserIsActive };

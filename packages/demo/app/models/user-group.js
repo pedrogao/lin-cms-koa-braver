@@ -25,6 +25,7 @@ UserGroup.init(
   },
   {
     sequelize,
+    timestamps: false,
     tableName: 'lin_user_group',
     modelName: 'user_group',
     indexes: [
@@ -36,3 +37,7 @@ UserGroup.init(
     ]
   }
 )
+
+module.exports = {
+  UserGroupModel: UserGroup,
+}

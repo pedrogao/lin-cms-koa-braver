@@ -25,6 +25,7 @@ GroupPermission.init(
   },
   {
     sequelize,
+    timestamps: false,
     tableName: 'lin_group_permission',
     modelName: 'group_permission',
     indexes: [

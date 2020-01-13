@@ -1,21 +1,42 @@
-const { LinRouter, getTokens } =require('@pedro/core');
+'use strict';
 
+import { LinRouter, getTokens } from '@pedro/core';
 
 import {
   RegisterValidator,
   LoginValidator,
-  UpdateInfoValidator,
-  ChangePasswordValidator,
-  AvatarUpdateValidator
 } from '../../validators/user';
 
-import { UserModel, UserIdentityModel } from '../../models/user'
+import { adminRequired } from '../../middleware/admin-required';
 
-// const { UserDao } = require('../../dao/user');
+import { UserModel, UserIdentityModel } from '../../models/user';
 
-export const user = new LinRouter({
+import { UserDao } from '../../dao/user';
+
+const user = new LinRouter({
   prefix: '/cms/user'
 });
+
+const userDao = new UserDao();
+
+user.linPost(
+  'userRegister',
+  '/register',
+  {
+    auth: '注册',
+    module: '用户',
+    mount: false
+  },
+  adminRequired,
+  // logger('管理员新建了一个用户'),
+  async ctx => {
+    const v = await new RegisterValidator().validate(ctx);
+    await userDao.createUser(v);
+    ctx.success({
+      msg: '用户创建成功'
+    });
+  }
+);
 
 user.linPost(
   'userLogin',
@@ -39,3 +60,6 @@ user.linPost(
   }
 );
 
+export {
+  user
+}

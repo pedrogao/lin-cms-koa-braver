@@ -259,7 +259,7 @@ function getTokens(user) {
  * @param ctx koa 的context
  * @param type 令牌的类型
  */
-async function parseHeader(ctx: RouterContext, type = TokenType.ACCESS) {
+function parseHeader(ctx: RouterContext, type = TokenType.ACCESS) {
   // 此处借鉴了koa-jwt
   if (!ctx.header || !ctx.header.authorization) {
     ctx.throw(new AuthFailed({ msg: '认证失败，请检查请求令牌是否正确' }));
@@ -281,14 +281,15 @@ async function parseHeader(ctx: RouterContext, type = TokenType.ACCESS) {
       if (!get(obj, 'scope') || get(obj, 'scope') !== 'lin') {
         ctx.throw(new AuthFailed({ msg: '请使用正确作用域的令牌' }));
       }
-      // @ts-ignore
-      const user = await ctx.manager.userModel.findByPk(get(obj, 'identity'));
-      if (!user) {
-        ctx.throw(new NotFound({ msg: '用户不存在' }));
-      }
-      // 将user挂在ctx上
-      // @ts-ignore
-      ctx.currentUser = user;
+      return obj
+      // // @ts-ignore
+      // const user = await ctx.manager.userModel.findByPk(get(obj, 'identity'));
+      // if (!user) {
+      //   ctx.throw(new NotFound({ msg: '用户不存在' }));
+      // }
+      // // 将user挂在ctx上
+      // // @ts-ignore
+      // ctx.currentUser = user;
     }
   } else {
     ctx.throw(new AuthFailed());
@@ -399,30 +400,30 @@ async function groupRequired(ctx: RouterContext, next: () => Promise<any>) {
   }
 }
 
-/**
- * 守卫函数，非超级管理员不可访问
- */
-async function adminRequired(ctx: RouterContext, next: () => Promise<any>) {
-  if (ctx.request.method !== 'OPTIONS') {
-    await parseHeader(ctx);
-    // @ts-ignore
-    const currentUser = ctx.currentUser;
-    if (currentUser && currentUser.isAdmin) {
-      await next();
-    } else {
-      throw new AuthFailed({ msg: '只有超级管理员可操作' });
-    }
-  } else {
-    await next();
-  }
-}
+// /**
+//  * 守卫函数，非超级管理员不可访问
+//  */
+// async function adminRequired(ctx: RouterContext, next: () => Promise<any>) {
+//   if (ctx.request.method !== 'OPTIONS') {
+//     await parseHeader(ctx);
+//     // @ts-ignore
+//     const currentUser = ctx.currentUser;
+//     if (currentUser && currentUser.isAdmin) {
+//       await next();
+//     } else {
+//       throw new AuthFailed({ msg: '只有超级管理员可操作' });
+//     }
+//   } else {
+//     await next();
+//   }
+// }
 
 export {
   jwt,
   getTokens,
   loginRequired,
   groupRequired,
-  adminRequired,
+  parseHeader,
   refreshTokenRequired,
   refreshTokenRequiredWithUnifyException,
   checkUserIsActive

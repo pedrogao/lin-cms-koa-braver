@@ -163,6 +163,7 @@ User.init({
 })
 
 module.exports = {
+  identityType: type,
   UserModel: User,
   UserIdentityModel: UserIdentity
 }

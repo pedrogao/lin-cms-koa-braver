@@ -40,3 +40,7 @@ Group.init({
     }
   }
 })
+
+module.exports = {
+  GroupModel: Group,
+}

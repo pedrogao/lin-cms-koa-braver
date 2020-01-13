@@ -209,7 +209,7 @@ exports.getTokens = getTokens;
  * @param ctx koa 的context
  * @param type 令牌的类型
  */
-async function parseHeader(ctx, type = utils_1.TokenType.ACCESS) {
+function parseHeader(ctx, type = utils_1.TokenType.ACCESS) {
     // 此处借鉴了koa-jwt
     if (!ctx.header || !ctx.header.authorization) {
         ctx.throw(new exception_1.AuthFailed({ msg: '认证失败，请检查请求令牌是否正确' }));
@@ -229,20 +229,22 @@ async function parseHeader(ctx, type = utils_1.TokenType.ACCESS) {
             if (!lodash_1.get(obj, 'scope') || lodash_1.get(obj, 'scope') !== 'lin') {
                 ctx.throw(new exception_1.AuthFailed({ msg: '请使用正确作用域的令牌' }));
             }
-            // @ts-ignore
-            const user = await ctx.manager.userModel.findByPk(lodash_1.get(obj, 'identity'));
-            if (!user) {
-                ctx.throw(new exception_1.NotFound({ msg: '用户不存在' }));
-            }
-            // 将user挂在ctx上
-            // @ts-ignore
-            ctx.currentUser = user;
+            return obj;
+            // // @ts-ignore
+            // const user = await ctx.manager.userModel.findByPk(get(obj, 'identity'));
+            // if (!user) {
+            //   ctx.throw(new NotFound({ msg: '用户不存在' }));
+            // }
+            // // 将user挂在ctx上
+            // // @ts-ignore
+            // ctx.currentUser = user;
         }
     }
     else {
         ctx.throw(new exception_1.AuthFailed());
     }
 }
+exports.parseHeader = parseHeader;
 function checkUserIsActive(user) {
     if (!user || !user.isActive) {
         throw new exception_1.AuthFailed({ msg: '您目前处于未激活状态，请联系超级管理员' });
@@ -349,23 +351,3 @@ async function groupRequired(ctx, next) {
     }
 }
 exports.groupRequired = groupRequired;
-/**
- * 守卫函数，非超级管理员不可访问
- */
-async function adminRequired(ctx, next) {
-    if (ctx.request.method !== 'OPTIONS') {
-        await parseHeader(ctx);
-        // @ts-ignore
-        const currentUser = ctx.currentUser;
-        if (currentUser && currentUser.isAdmin) {
-            await next();
-        }
-        else {
-            throw new exception_1.AuthFailed({ msg: '只有超级管理员可操作' });
-        }
-    }
-    else {
-        await next();
-    }
-}
-exports.adminRequired = adminRequired;
