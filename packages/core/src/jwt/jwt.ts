@@ -303,23 +303,6 @@ function checkUserIsActive(user) {
 }
 
 /**
- * 守卫函数，用户登陆即可访问
- */
-async function loginRequired(ctx: RouterContext, next: () => Promise<any>) {
-  if (ctx.request.method !== 'OPTIONS') {
-    await parseHeader(ctx);
-    // 一定要await，否则这个守卫函数没有作用
-    // 用户处于未激活状态
-    // @ts-ignore
-    const currentUser = ctx.currentUser;
-    checkUserIsActive(currentUser);
-    await next();
-  } else {
-    await next();
-  }
-}
-
-/**
  * 守卫函数，用户刷新令牌
  */
 async function refreshTokenRequired(
@@ -329,26 +312,6 @@ async function refreshTokenRequired(
   // 添加access 和 refresh 的标识位
   if (ctx.request.method !== 'OPTIONS') {
     await parseHeader(ctx, TokenType.REFRESH);
-    await next();
-  } else {
-    await next();
-  }
-}
-
-/**
- * 守卫函数，用户刷新令牌，统一异常
- */
-async function refreshTokenRequiredWithUnifyException(
-  ctx: RouterContext,
-  next: () => Promise<any>
-) {
-  // 添加access 和 refresh 的标识位
-  if (ctx.request.method !== 'OPTIONS') {
-    try {
-      await parseHeader(ctx, TokenType.REFRESH);
-    } catch (error) {
-      throw new RefreshException();
-    }
     await next();
   } else {
     await next();
@@ -400,31 +363,11 @@ async function groupRequired(ctx: RouterContext, next: () => Promise<any>) {
   }
 }
 
-// /**
-//  * 守卫函数，非超级管理员不可访问
-//  */
-// async function adminRequired(ctx: RouterContext, next: () => Promise<any>) {
-//   if (ctx.request.method !== 'OPTIONS') {
-//     await parseHeader(ctx);
-//     // @ts-ignore
-//     const currentUser = ctx.currentUser;
-//     if (currentUser && currentUser.isAdmin) {
-//       await next();
-//     } else {
-//       throw new AuthFailed({ msg: '只有超级管理员可操作' });
-//     }
-//   } else {
-//     await next();
-//   }
-// }
-
 export {
   jwt,
   getTokens,
-  loginRequired,
   groupRequired,
   parseHeader,
   refreshTokenRequired,
-  refreshTokenRequiredWithUnifyException,
   checkUserIsActive
 };

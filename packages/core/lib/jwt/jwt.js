@@ -252,24 +252,6 @@ function checkUserIsActive(user) {
 }
 exports.checkUserIsActive = checkUserIsActive;
 /**
- * 守卫函数，用户登陆即可访问
- */
-async function loginRequired(ctx, next) {
-    if (ctx.request.method !== 'OPTIONS') {
-        await parseHeader(ctx);
-        // 一定要await，否则这个守卫函数没有作用
-        // 用户处于未激活状态
-        // @ts-ignore
-        const currentUser = ctx.currentUser;
-        checkUserIsActive(currentUser);
-        await next();
-    }
-    else {
-        await next();
-    }
-}
-exports.loginRequired = loginRequired;
-/**
  * 守卫函数，用户刷新令牌
  */
 async function refreshTokenRequired(ctx, next) {
@@ -283,25 +265,6 @@ async function refreshTokenRequired(ctx, next) {
     }
 }
 exports.refreshTokenRequired = refreshTokenRequired;
-/**
- * 守卫函数，用户刷新令牌，统一异常
- */
-async function refreshTokenRequiredWithUnifyException(ctx, next) {
-    // 添加access 和 refresh 的标识位
-    if (ctx.request.method !== 'OPTIONS') {
-        try {
-            await parseHeader(ctx, utils_1.TokenType.REFRESH);
-        }
-        catch (error) {
-            throw new exception_1.RefreshException();
-        }
-        await next();
-    }
-    else {
-        await next();
-    }
-}
-exports.refreshTokenRequiredWithUnifyException = refreshTokenRequiredWithUnifyException;
 /**
  * 守卫函数，用于权限组鉴权
  */

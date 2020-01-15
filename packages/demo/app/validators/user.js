@@ -77,8 +77,16 @@ class UpdateInfoValidator extends LinValidator {
     ];
     this.nickname = [
       new Rule('isOptional'),
-      new Rule('isLength', '昵称长度必须在2~10之间', 2, 10)
-    ]
+      new Rule('isLength', '昵称长度必须在2~10之间', 2, 24)
+    ];
+    this.username = [
+      new Rule('isOptional'),
+      new Rule('isLength', '用户名长度必须在2~10之间', 2, 24)
+    ];
+    this.avatar = [
+      new Rule('isOptional'),
+      new Rule('isURL', '头像的url链接不符合l规范，请输入正确的url')
+    ];
   }
 }
 

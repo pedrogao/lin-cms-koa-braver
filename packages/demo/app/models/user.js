@@ -1,8 +1,8 @@
-import { NotFound, verify, AuthFailed } from "@pedro/core";
+import { NotFound, verify, AuthFailed, generate, Failed, config } from "@pedro/core";
 
 const sequelize = require('../libs/db')
 const { Model, Sequelize } = require('sequelize')
-const { set, get, has, merge } = require('lodash')
+const { set, get, has, merge, join } = require('lodash')
 
 const type = 'USERNAME_PASSWORD'
 
@@ -27,6 +27,24 @@ class UserIdentity extends Model {
       return false;
     }
     return verify(raw, this.credential);
+  }
+
+  static async changePassword(currentUser, oldPassword, newPassword) {
+    const user = await this.findOne({where: {
+      identity_type: type,
+      identifier: currentUser.username,
+      delete_time: null
+    }})
+    if (!user) {
+      throw new NotFound({msg: '用户不存在', errorCode: 10021});
+    }
+    if (!user.checkPassword(oldPassword)) {
+      throw new Failed({
+        msg: '修改密码失败，你可能输入了错误的旧密码'
+      });
+    }
+    user.credential = generate(newPassword);
+    user.save();
   }
 }
 
@@ -81,14 +99,6 @@ class User extends Model {
 
   resetPassword(newPassword) {
     this.password = newPassword;
-  }
-
-  changePassword(oldPassword, newPassword) {
-    if (this.checkPassword(oldPassword)) {
-      this.password = newPassword;
-      return true;
-    }
-    return false;
   }
 
   toJSON() {

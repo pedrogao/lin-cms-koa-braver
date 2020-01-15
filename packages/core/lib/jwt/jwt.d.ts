@@ -100,19 +100,11 @@ declare function getTokens(user: any): {
 declare function parseHeader(ctx: RouterContext, type?: TokenType): any;
 declare function checkUserIsActive(user: any): void;
 /**
- * 守卫函数，用户登陆即可访问
- */
-declare function loginRequired(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
-/**
  * 守卫函数，用户刷新令牌
  */
 declare function refreshTokenRequired(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
 /**
- * 守卫函数，用户刷新令牌，统一异常
- */
-declare function refreshTokenRequiredWithUnifyException(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
-/**
  * 守卫函数，用于权限组鉴权
  */
 declare function groupRequired(ctx: RouterContext, next: () => Promise<any>): Promise<void>;
-export { jwt, getTokens, loginRequired, groupRequired, parseHeader, refreshTokenRequired, refreshTokenRequiredWithUnifyException, checkUserIsActive };
+export { jwt, getTokens, groupRequired, parseHeader, refreshTokenRequired, checkUserIsActive };

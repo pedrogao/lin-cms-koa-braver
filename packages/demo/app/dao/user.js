@@ -17,8 +17,9 @@ class UserDao {
     });
     if (user) {
       throw new RepeatException({
-        msg: '用户名重复，请重新输入'
-      });
+        msg: '已经有用户使用了该名称，请重新输入新的用户名',
+        errorCode: 10071
+      })
     }
     if (v.get('body.email') && v.get('body.email').trim() !== '') {
       user = await UserModel.findOne({
@@ -28,7 +29,8 @@ class UserDao {
       });
       if (user) {
         throw new RepeatException({
-          msg: '注册邮箱重复，请重新输入'
+          msg: '邮箱已被使用，请重新填入新的邮箱',
+          errorCode: 10076
         });
       }
     }
@@ -46,15 +48,30 @@ class UserDao {
 
   async updateUser (ctx, v) {
     let user = ctx.currentUser;
+    if (v.get('body.username') && user.username !== v.get('body.username')) {
+      const exit = await UserModel.findOne({
+        where: {
+          username: v.get('body.username')
+        }
+      });
+      if (exit) {
+        throw new RepeatException({
+          msg: '已经有用户使用了该名称，请重新输入新的用户名',
+          errorCode: 10071
+        })
+      }
+      user.username = v.get('body.username')
+    }
     if (v.get('body.email') && user.email !== v.get('body.email')) {
-      const exit = await ctx.manager.userModel.findOne({
+      const exit = await UserModel.findOne({
         where: {
           email: v.get('body.email')
         }
       });
       if (exit) {
-        throw new ParametersException({
-          msg: '邮箱已被注册，请重新输入邮箱'
+        throw new RepeatException({
+          msg: '邮箱已被使用，请重新填入新的邮箱',
+          errorCode: 10076
         });
       }
       user.email = v.get('body.email');
@@ -62,27 +79,33 @@ class UserDao {
     if (v.get('body.nickname')) {
       user.nickname = v.get('body.nickname')
     }
+    if (v.get('body.avatar')) {
+      user.avatar = v.get('body.avatar')
+    }
     user.save();
   }
 
-  async getAuths (ctx) {
-    let user = ctx.currentUser;
-    let auths = await ctx.manager.authModel.findAll({
-      where: {
-        group_id: user.group_id
-      }
-    });
-    let group = await ctx.manager.groupModel.findOne({
-      where: {
-        id: user.group_id
-      }
-    })
-    const aus = this.splitAuths(auths);
-    set(user, 'auths', aus);
-    if (group) {
-      set(user, 'groupName', group.name);
-    }
-    return user;
+  async getPermissions (ctx) {
+    let user = ctx.currentUser
+    
+    
+    // let user = ctx.currentUser;
+    // let auths = await ctx.manager.authModel.findAll({
+    //   where: {
+    //     group_id: user.group_id
+    //   }
+    // });
+    // let group = await ctx.manager.groupModel.findOne({
+    //   where: {
+    //     id: user.group_id
+    //   }
+    // })
+    // const aus = this.splitAuths(auths);
+    // set(user, 'auths', aus);
+    // if (group) {
+    //   set(user, 'groupName', group.name);
+    // }
+    // return user;
   }
 
   splitAuths (auths) {
