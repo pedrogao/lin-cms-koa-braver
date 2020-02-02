@@ -1,6 +1,4 @@
-'use strict';
-
-const { LinValidator, Rule, config } = require('@pedro/core');
+import { LinValidator, Rule, config } from '@pedro/core';
 
 class PositiveIdValidator extends LinValidator {
   constructor () {
@@ -23,7 +21,7 @@ class PaginateValidator extends LinValidator {
   }
 }
 
-module.exports = {
+export {
   PaginateValidator,
   PositiveIdValidator
 };

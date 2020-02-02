@@ -12,5 +12,6 @@ tslib_1.__exportStar(require("./router/"), exports);
 tslib_1.__exportStar(require("./validator"), exports);
 tslib_1.__exportStar(require("./jwt"), exports);
 tslib_1.__exportStar(require("./loader"), exports);
+tslib_1.__exportStar(require("./interface"), exports);
 var core_1 = require("./core.");
 exports.Lin = core_1.Lin;

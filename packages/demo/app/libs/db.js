@@ -1,5 +1,5 @@
+import { config } from '@pedro/core';
 import { Sequelize } from 'sequelize'
-const { config } = require('@pedro/core');
 
 /**
  * 数据库名，默认lin-cms

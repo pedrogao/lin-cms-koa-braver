@@ -1,8 +1,37 @@
-const sequelize = require('../libs/db')
-const { Model, Sequelize } = require('sequelize')
+import sequelize from '../libs/db';
+import { Model, Sequelize } from 'sequelize';
+import { routeMetaInfo } from '@pedro/core';
 
 class Permission extends Model {
-  
+  toJSON() {
+    const origin = {
+      id: this.id,
+      name: this.name,
+      module: this.module,
+    };
+    return origin;
+  }
+
+  static async initPermission() {
+    let transaction;
+    try {
+      transaction = await sequelize.transaction();
+      const info = Array.from(routeMetaInfo.values());
+      const existence = await this.findAll()
+      for (const { auth, module: moduleName } of info) {
+        if (existence.find(v => v.name === auth && v.module === moduleName)) {
+          continue;
+        }
+        await this.create({
+          name: auth,
+          module: moduleName
+        }, { transaction });
+      };
+      await transaction.commit();
+    } catch (error) {
+      if (transaction) await transaction.rollback();
+    }
+  }
 }
 
 Permission.init({
@@ -31,12 +60,14 @@ Permission.init({
   paranoid: true,
   getterMethods: {
     createTime() {
-      // @ts-ignore
       return new Date(this.getDataValue('create_time')).getTime();
     },
     updateTime() {
-      // @ts-ignore
       return new Date(this.getDataValue('update_time')).getTime();
     }
   }
 })
+
+export {
+  Permission as PermissionModel
+}

@@ -38,7 +38,7 @@ class HttpException extends Error {
         /**
          * 特定的错误码
          */
-        this.errorCode = 999;
+        this.errorCode = 9999;
         this.fields = ['msg', 'errorCode'];
         if (ex && ex.code) {
             assert_1.default(lodash_1.isInteger(ex.code));

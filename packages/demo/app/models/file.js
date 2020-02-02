@@ -1,8 +1,12 @@
-import { sequelize } from '../libs/db'
-const { Model,Sequelize } = require('sequelize')
+import { Model, Sequelize } from 'sequelize';
+import sequelize from '../libs/db';
 
 class File extends Model {
-  
+  static async createRecord(args, commit) {
+    const record = File.build(args);
+    commit && (await record.save());
+    return record;
+  }
 }
 
 File.init(
@@ -62,3 +66,7 @@ File.init(
     }
   }
 )
+
+export {
+  File as FileModel
+}

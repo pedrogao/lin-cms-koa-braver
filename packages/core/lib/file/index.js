@@ -62,10 +62,10 @@ class Uploader {
             throw new Error('storeDir must not be undefined');
         }
         this.storeDir && (storeDir = this.storeDir);
-        const extrat = path_1.default.isAbsolute(storeDir)
+        const extract = path_1.default.isAbsolute(storeDir)
             ? path_1.default.join(storeDir, formatDay)
             : path_1.default.join(process.cwd(), storeDir, formatDay);
-        return extrat;
+        return extract;
     }
     /**
      * getFormatDay

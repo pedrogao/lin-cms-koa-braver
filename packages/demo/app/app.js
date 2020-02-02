@@ -1,14 +1,10 @@
-
-
-const Koa = require('koa');
-const KoaBodyParser = require('koa-bodyparser');
-const cors = require('@koa/cors');
-const mount = require('koa-mount');
-const serve = require('koa-static');
-const { config, json, logging, success, jwt, Loader } = require('@pedro/core')
-
-// const Router = require('koa-router');
-import Router from 'koa-router'
+import Koa from 'koa';
+import KoaBodyParser from 'koa-bodyparser';
+import cors from '@koa/cors';
+import mount from 'koa-mount';
+import serve from 'koa-static';
+import { config, json, logging, success, jwt, Loader } from '@pedro/core';
+import { PermissionModel } from './models/permission';
 
 /**
  * 首页
@@ -98,6 +94,7 @@ async function createApp() {
   applyJwt(app);
   const lin = new Lin();
   await lin.initApp(app, true);
+  await PermissionModel.initPermission()
   indexPage(app);
   multipart(app);
   return app

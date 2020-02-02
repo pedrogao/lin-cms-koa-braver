@@ -1,15 +1,37 @@
-const {
-  parseHeader,
+import {
   NotFound,
+  AuthFailed,
+  parseHeader,
   RefreshException,
   TokenType,
-} = require('@pedro/core')
-const { UserGroupModel } = require('../models/user-group')
-const { GroupModel } = require('../models/group')
-const { UserModel } = require('../models/user')
-const { Op } = require('sequelize');
+  routeMetaInfo,
+} from '@pedro/core';
+import { UserGroupModel } from '../models/user-group';
+import { GroupModel } from '../models/group';
+import { GroupPermissionModel } from '../models/group-permission';
+import { PermissionModel } from '../models/permission';
+import { UserModel } from '../models/user';
+import { Op } from 'sequelize';
+import { uniq } from 'lodash';
 
-const GROUP_ROOT = 'root'
+// 是否超级管理员
+async function isAdmin(ctx) {
+  const userGroup = await UserGroupModel.findAll({
+    where: {
+      user_id: ctx.currentUser.id
+    }
+  });
+  const groupIds = userGroup.map(v => v.group_id)
+  const is = await GroupModel.findOne({
+    where: {
+      name: 'root',
+      id: {
+        [Op.in]: groupIds
+      }
+    }
+  });
+  return is
+}
 
 /**
  * 将 user 挂在 ctx 上
@@ -29,23 +51,9 @@ async function mountUser(ctx) {
  */
 async function adminRequired(ctx, next) {
   if (ctx.request.method !== 'OPTIONS') {
-    await mountUser(ctx)
+    await mountUser(ctx);
 
-    const userGroup = await UserGroupModel.findAll({
-      where: {
-        user_id: ctx.currentUser.id
-      }
-    })
-    const groupIds = userGroup.map(v => v.group_id)
-    const group = await GroupModel.findOne({
-      where: {
-        name: GROUP_ROOT,
-        id: {
-          [Op.in]: groupIds
-        }
-      }
-    })
-    if (group) {
+    if (await isAdmin(ctx)) {
       await next();
     } else {
       throw new AuthFailed({ msg: '只有超级管理员可操作' });
@@ -72,12 +80,15 @@ async function loginRequired(ctx, next) {
  * 守卫函数，用户刷新令牌，统一异常
  */
 async function refreshTokenRequiredWithUnifyException(ctx, next) {
-  // 添加access 和 refresh 的标识位
   if (ctx.request.method !== 'OPTIONS') {
-    await mountUser(ctx)
-
     try {
-      await parseHeader(ctx, TokenType.REFRESH);
+      const { identity } = parseHeader(ctx, TokenType.REFRESH);
+      const user = await UserModel.findByPk(identity);
+      if (!user) {
+        ctx.throw(new NotFound({ msg: '用户不存在' }));
+      }
+      // 将user挂在ctx上
+      ctx.currentUser = user;
     } catch (error) {
       throw new RefreshException();
     }
@@ -87,8 +98,61 @@ async function refreshTokenRequiredWithUnifyException(ctx, next) {
   }
 }
 
-module.exports = {
+/**
+ * 守卫函数，用于权限组鉴权
+ */
+async function groupRequired(ctx, next) {
+  if (ctx.request.method !== 'OPTIONS') {
+    await mountUser(ctx);
+
+    // 超级管理员
+    if (await isAdmin(ctx)) {
+      await next();
+    } else {
+      if (ctx.matched) {
+        const routeName = ctx._matchedRouteName || ctx.routerName;
+        const endpoint = `${ctx.method} ${routeName}`;
+        const { auth, module } = routeMetaInfo.get(endpoint);
+        const userGroup = await UserGroupModel.findAll({
+          where: {
+            user_id: ctx.currentUser.id
+          }
+        });
+        const groupIds = userGroup.map(v => v.group_id)
+        const groupPermission = await GroupPermissionModel.findAll({
+          where: {
+            group_id: {
+              [Op.in]: groupIds
+            }
+          }
+        });
+        const permissionIds = uniq(groupPermission.map(v => v.permission_id));
+        const item = await PermissionModel.findOne({
+          where: {
+            name: auth,
+            module,
+            id: {
+              [Op.in]: permissionIds
+            }
+          }
+        });
+        if (item) {
+          await next();
+        } else {
+          throw new AuthFailed({ msg: '权限不够，请联系超级管理员获得权限' });
+        }
+      } else {
+        throw new AuthFailed({ msg: '权限不够，请联系超级管理员获得权限' });
+      }
+    }
+  } else {
+    await next();
+  }
+}
+
+export {
   adminRequired,
   loginRequired,
+  groupRequired,
   refreshTokenRequiredWithUnifyException
 }

@@ -1,7 +1,5 @@
-'use strict';
-
-const { toSafeInteger, get, isInteger } = require('lodash');
-const { ParametersException } = require('@pedro/core');
+import { toSafeInteger, get, isInteger } from 'lodash';
+import { ParametersException } from '@pedro/core';
 
 function getSafeParamId (ctx) {
   const id = toSafeInteger(get(ctx.params, 'id'));
@@ -27,4 +25,4 @@ function isOptional (val) {
   return false;
 }
 
-module.exports = { getSafeParamId, isOptional };
+export { getSafeParamId, isOptional }

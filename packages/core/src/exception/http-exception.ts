@@ -32,7 +32,7 @@ export class HttpException extends Error {
   /**
    * 特定的错误码
    */
-  public errorCode: number = 999;
+  public errorCode: number = 9999;
 
   public fields: string[] = ['msg', 'errorCode'];
 

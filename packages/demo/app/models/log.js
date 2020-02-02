@@ -1,8 +1,27 @@
-const sequelize = require('../libs/db')
-const { Model,Sequelize } = require('sequelize')
+import sequelize from '../libs/db';
+import { Model, Sequelize } from 'sequelize';
 
 class Log extends Model {
-  
+  toJSON() {
+    let origin = {
+      id: this.id,
+      message: this.message,
+      time: this.time,
+      user_id: this.user_id,
+      username: this.username,
+      status_code: this.status_code,
+      method: this.method,
+      path: this.path,
+      permission: this.permission
+    };
+    return origin;
+  }
+
+  static createLog(args, commit) {
+    const log = Log.build(args);
+    commit && log.save();
+    return log;
+  }
 }
 
 Log.init(
@@ -36,6 +55,7 @@ Log.init(
     }
   },
   {
+    sequelize,
     tableName: 'lin_log',
     modelName: 'log',
     createdAt: 'create_time',
@@ -54,3 +74,7 @@ Log.init(
     }
   }
 )
+
+export {
+  Log as LogModel
+}

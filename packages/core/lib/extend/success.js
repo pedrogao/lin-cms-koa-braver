@@ -19,9 +19,9 @@ exports.success = (app) => {
         this.type = 'application/json';
         const suc = new exception_1.Success(ex);
         let data = {
-            error_code: suc.errorCode,
-            msg: suc.msg,
-            url: this.req.url
+            code: suc.errorCode,
+            message: suc.msg,
+            request: `${this.method} ${this.req.url}`
         };
         this.status = suc.code;
         this.body = JSON.stringify(data);

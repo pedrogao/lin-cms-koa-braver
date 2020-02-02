@@ -1,8 +1,19 @@
-const sequelize = require('../libs/db')
-const { Model,Sequelize } = require('sequelize')
+import sequelize from '../libs/db';
+import { Model,Sequelize } from 'sequelize';
+import { has, get } from 'lodash';
 
 class Group extends Model {
-
+  toJSON() {
+    const origin = {
+      id: this.id,
+      name: this.id,
+      info: this.info,
+    }
+    if (has(this, 'permissions')) {
+      return { ...origin, permissions: get(this, 'permissions', [])}
+    }
+    return origin
+  }
 }
 
 Group.init({
@@ -41,6 +52,6 @@ Group.init({
   }
 })
 
-module.exports = {
-  GroupModel: Group,
+export {
+  Group as GroupModel
 }

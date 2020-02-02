@@ -1,8 +1,6 @@
-'use strict';
-
-const { Rule, checkDateFormat } = require('@pedro/core');
-const { PaginateValidator } = require('./common');
-const { isOptional } = require('../libs/util');
+import { Rule, checkDateFormat } from '@pedro/core';
+import { PaginateValidator } from './common';
+import { isOptional } from '../libs/util';
 
 class LogFindValidator extends PaginateValidator {
   constructor () {
@@ -41,6 +39,6 @@ class LogFindValidator extends PaginateValidator {
   }
 }
 
-module.exports = {
+export {
   LogFindValidator
 };

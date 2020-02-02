@@ -1,9 +1,7 @@
-'use strict';
-
-const Sequelize = require('sequelize');
-const { Log } = require('@pedro/core');
-const { set } = require('lodash');
-const { db } = require('../libs/db');
+import Sequelize from 'sequelize';
+import { LogModel } from '../models/log';
+import { set } from 'lodash';
+import sequelize from '../libs/db';
 
 class LogDao {
   async getLogs (v) {
@@ -13,14 +11,14 @@ class LogDao {
     v.get('query.name') && set(condition, 'user_name', v.get('query.name'));
     v.get('query.start') &&
       v.get('query.end') &&
-      set(condition, 'time', {
+      set(condition, 'create_time', {
         [Sequelize.Op.between]: [v.get('query.start'), v.get('query.end')]
       });
-    let { rows, count } = await Log.findAndCountAll({
+    let { rows, count } = await LogModel.findAndCountAll({
       where: Object.assign({}, condition),
       offset: start * count1,
       limit: count1,
-      order: [['time', 'DESC']]
+      order: [['create_time', 'DESC']]
     });
     return {
       rows,
@@ -35,10 +33,10 @@ class LogDao {
     v.get('query.name') && set(condition, 'user_name', v.get('query.name'));
     v.get('query.start') &&
       v.get('query.end') &&
-      set(condition, 'time', {
+      set(condition, 'create_time', {
         [Sequelize.Op.between]: [v.get('query.start'), v.get('query.end')]
       });
-    let { rows, count } = await Log.findAndCountAll({
+    let { rows, count } = await LogModel.findAndCountAll({
       where: Object.assign({}, condition, {
         message: {
           [Sequelize.Op.like]: `%${keyword}%`
@@ -46,7 +44,7 @@ class LogDao {
       }),
       offset: start * count1,
       limit: count1,
-      order: [['time', 'DESC']]
+      order: [['create_time', 'DESC']]
     });
     return {
       rows,
@@ -55,8 +53,8 @@ class LogDao {
   }
 
   async getUserNames (start, count) {
-    const logs = await db.query(
-      'SELECT lin_log.user_name AS names FROM lin_log GROUP BY lin_log.user_name HAVING COUNT(lin_log.user_name)>0 limit :count offset :start',
+    const logs = await sequelize.query(
+      'SELECT lin_log.username AS names FROM lin_log GROUP BY lin_log.username HAVING COUNT(lin_log.username)>0 limit :count offset :start',
       {
         replacements: {
           start: start * count,
@@ -69,4 +67,4 @@ class LogDao {
   }
 }
 
-module.exports = { LogDao };
+export { LogDao }

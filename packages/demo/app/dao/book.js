@@ -1,8 +1,6 @@
-'use strict';
-
-const { NotFound, Forbidden } = require('lin-mizar');
-const { Book } = require('../models/book');
-const Sequelize = require('sequelize');
+import { NotFound, Forbidden } from '@pedro/core';
+import { Book } from '../models/book';
+import Sequelize from 'sequelize';
 
 class BookDao {
   async getBook (id) {
@@ -85,4 +83,4 @@ class BookDao {
   }
 }
 
-module.exports = { BookDao };
+export { BookDao }

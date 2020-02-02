@@ -1,8 +1,8 @@
-import { NotFound, verify, AuthFailed, generate, Failed, config } from "@pedro/core";
+import { NotFound, verify, AuthFailed, generate, Failed } from "@pedro/core";
 
-const sequelize = require('../libs/db')
-const { Model, Sequelize } = require('sequelize')
-const { set, get, has, merge, join } = require('lodash')
+import sequelize from '../libs/db';
+import { Model, Sequelize } from 'sequelize';
+import { get, has, unset } from 'lodash';
 
 const type = 'USERNAME_PASSWORD'
 
@@ -42,6 +42,19 @@ class UserIdentity extends Model {
       throw new Failed({
         msg: '修改密码失败，你可能输入了错误的旧密码'
       });
+    }
+    user.credential = generate(newPassword);
+    user.save();
+  }
+
+  static async resetPassword(currentUser, newPassword) {
+    const user = await this.findOne({where: {
+      identity_type: type,
+      identifier: currentUser.username,
+      delete_time: null
+    }});
+    if (!user) {
+      throw new NotFound({msg: '用户不存在', errorCode: 10021});
     }
     user.credential = generate(newPassword);
     user.save();
@@ -96,11 +109,6 @@ UserIdentity.init(
 )
 
 class User extends Model {
-
-  resetPassword(newPassword) {
-    this.password = newPassword;
-  }
-
   toJSON() {
     const origin = {
       id: this.id,
@@ -108,10 +116,15 @@ class User extends Model {
       nickname: this.nickname,
       email: this.email,
       avatar: this.avatar,
-      // group_id: this.group_id,
-      create_time: this.createTime,
-      update_time: this.updateTime
+      // create_time: this.createTime,
+      // update_time: this.updateTime
     };
+    if (has(this, 'groups')) {
+      return { ...origin, groups: get(this, 'groups', []) };
+    } else if (has(this, 'permissions')) {
+      unset(origin, 'nickname')
+      return { ...origin, admin: get(this, 'admin', false), permissions: get(this, 'permissions', [])}
+    }
     // if (has(this, 'auths')) {
     //   return { ...origin, auths: get(this, 'auths', []) };
     // } else if (has(this, 'groupName')) {
@@ -142,10 +155,9 @@ User.init({
     // 用户默认生成图像，为null
     type: Sequelize.STRING({ length: 500 }),
     comment: '头像url',
-    get() {
-      // @ts-ignore
-      return join(config.getItem('siteDomain', 'assets/', this.getDataValue('avatar')))
-    }
+    // get() {
+    //   return config.getItem('siteDomain').replace(/\/+$/, '') + '/assets/' + this.getDataValue('avatar')
+    // }
   },
   email: {
     type: Sequelize.STRING({ length: 100 }),
@@ -172,8 +184,8 @@ User.init({
   }
 })
 
-module.exports = {
-  identityType: type,
-  UserModel: User,
-  UserIdentityModel: UserIdentity
+export {
+  type as identityType,
+  User as UserModel,
+  UserIdentity as UserIdentityModel
 }

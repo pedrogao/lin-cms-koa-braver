@@ -1,5 +1,3 @@
-'use strict';
-
 import { LinRouter, getTokens } from '@pedro/core';
 import {
   RegisterValidator,
@@ -7,12 +5,14 @@ import {
   UpdateInfoValidator,
   ChangePasswordValidator,
 } from '../../validators/user';
+
 import {
   adminRequired,
   loginRequired,
   refreshTokenRequiredWithUnifyException
 } from '../../middleware/jwt';
 import { UserIdentityModel } from '../../models/user';
+import { logger } from '../../middleware/logger'
 import { UserDao } from '../../dao/user';
 
 const user = new LinRouter({
@@ -30,7 +30,7 @@ user.linPost(
     mount: false
   },
   adminRequired,
-  // logger('管理员新建了一个用户'),
+  logger('管理员新建了一个用户'),
   async ctx => {
     const v = await new RegisterValidator().validate(ctx);
     await userDao.createUser(v);
@@ -122,36 +122,34 @@ user.linGet(
   }
 );
 
-// user.linGet(
-//   'userGetPermissions',
-//   '/permissions',
-//   {
-//     auth: '查询自己拥有的权限',
-//     module: '用户',
-//     mount: false
-//   },
-//   loginRequired,
-//   async ctx => {
-//     let user = await userDao.getPermissions(ctx);
-//     ctx.json(user);
-//   }
-// );
+user.linGet(
+  'userGetPermissions',
+  '/permissions',
+  {
+    auth: '查询自己拥有的权限',
+    module: '用户',
+    mount: true
+  },
+  loginRequired,
+  async ctx => {
+    let user = await userDao.getPermissions(ctx);
+    ctx.json(user);
+  }
+);
 
-// user.linGet(
-//   'getInformation',
-//   '/information',
-//   {
-//     auth: '查询自己信息',
-//     module: '用户',
-//     mount: false
-//   },
-//   loginRequired,
-//   async ctx => {
-//     const user = ctx.currentUser;
-//     ctx.json(user);
-//   }
-// );
+user.linGet(
+  'getInformation',
+  '/information',
+  {
+    auth: '查询自己信息',
+    module: '用户',
+    mount: true
+  },
+  loginRequired,
+  async ctx => {
+    let info = await userDao.getInformation(ctx)
+    ctx.json(info);
+  }
+);
 
-export {
-  user
-}
+export { user }

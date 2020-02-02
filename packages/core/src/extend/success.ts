@@ -20,9 +20,9 @@ export const success = (app: Application) => {
     this.type = 'application/json';
     const suc = new Success(ex);
     let data = {
-      error_code: suc.errorCode,
-      msg: suc.msg,
-      url: this.req.url
+      code: suc.errorCode,
+      message: suc.msg,
+      request: `${this.method} ${this.req.url}`
     };
     this.status = suc.code;
     this.body = JSON.stringify(data);

@@ -1,12 +1,12 @@
-/* eslint-disable new-cap */
-'use strict';
+import { RepeatException, generate, NotFound, Forbidden } from '@pedro/core';
+import { UserModel, UserIdentityModel, identityType } from '../models/user';
+import { UserGroupModel } from '../models/user-group';
+import { GroupPermissionModel } from '../models/group-permission';
+import { GroupModel } from '../models/group';
 
-const { RepeatException, ParametersException, generate, NotFound } = require('@pedro/core');
-const { set, has } = require('lodash');
-const { UserModel, UserIdentityModel, identityType } = require('../models/user')
-const { UserGroupModel } = require('../models/user-group')
-const { GroupModel } = require('../models/group')
-const sequelize = require('../libs/db')
+import sequelize from '../libs/db';
+import { Op } from 'sequelize';
+import { set, has, uniq } from 'lodash';
 
 class UserDao {
   async createUser (v) {
@@ -36,6 +36,12 @@ class UserDao {
     }
     for (const id of (v.get('body.group_ids') || [])) {
       const group = await GroupModel.findByPk(id);
+      if (group.name === 'root') {
+        throw new Forbidden({
+          msg: 'root分组不可添加用户',
+          errorCode: 10073
+        });
+      }
       if (!group) {
         throw new NotFound({
           msg: '分组不存在，无法新建用户',
@@ -85,27 +91,55 @@ class UserDao {
     user.save();
   }
 
+  async getInformation (ctx) {
+    let user = ctx.currentUser
+
+    const userGroup = await UserGroupModel.findAll({
+      where: {
+        user_id: user.id
+      }
+    })
+    const groupIds = userGroup.map(v => v.id)
+    const groups = await GroupModel.findAll({
+      where: {
+        id: {
+          [Op.in]: groupIds
+        }
+      }
+    })
+    set(user, 'groups', groups);
+    return user
+  }
+
   async getPermissions (ctx) {
     let user = ctx.currentUser
-    
-    
-    // let user = ctx.currentUser;
-    // let auths = await ctx.manager.authModel.findAll({
-    //   where: {
-    //     group_id: user.group_id
-    //   }
-    // });
-    // let group = await ctx.manager.groupModel.findOne({
-    //   where: {
-    //     id: user.group_id
-    //   }
-    // })
-    // const aus = this.splitAuths(auths);
-    // set(user, 'auths', aus);
-    // if (group) {
-    //   set(user, 'groupName', group.name);
-    // }
-    // return user;
+    const userGroup = await UserGroupModel.findAll({
+      where: {
+        user_id: user.id
+      }
+    })
+    const groupIds = userGroup.map(v => v.group_id)
+    const groupPermission = await GroupPermissionModel.findAll({
+      where: {
+        group_id: {
+          [Op.in]: groupIds
+        }
+      }
+    })
+    const permissions = uniq(groupPermission.map(v => v.permission_id))
+    set(user, 'permissions', permissions)
+
+    const group = await GroupModel.findOne({
+      where: {
+        name: 'root',
+        id: {
+          [Op.in]: groupIds
+        }
+      }
+    });
+    set(user, 'admin', group ? true : false)
+
+    return user
   }
 
   splitAuths (auths) {
@@ -160,16 +194,31 @@ class UserDao {
           transaction
         }
       );
-      for (const id of (v.get('body.group_ids') || [])) {
+      // 未指定分组，默认加入游客分组
+      if (v.get('body.group_ids').length === 0) {
+        const guest = await GroupModel.findOne({
+          where: {
+            name: 'guest'
+          }
+        })
         await UserGroupModel.create(
           {
             user_id,
-            group_id: id
-          },
-          {
-            transaction
+            group_id: guest.id
           }
-        );
+        )
+      } else {
+        for (const id of (v.get('body.group_ids') || [])) {
+          await UserGroupModel.create(
+            {
+              user_id,
+              group_id: id
+            },
+            {
+              transaction
+            }
+          );
+        }
       }
       await transaction.commit();
     } catch (error) {
@@ -179,4 +228,4 @@ class UserDao {
   }
 }
 
-module.exports = { UserDao };
+export { UserDao }

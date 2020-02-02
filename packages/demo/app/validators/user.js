@@ -1,8 +1,6 @@
-'use strict';
-
-const { LinValidator, Rule } = require('@pedro/core');
-const { isOptional } = require('../libs/util');
-const validator = require('validator');
+import { LinValidator, Rule } from '@pedro/core';
+import { isOptional } from '../libs/util';
+import validator from 'validator';
 
 class RegisterValidator extends LinValidator {
   constructor () {
@@ -122,7 +120,7 @@ class AvatarUpdateValidator extends LinValidator {
   }
 }
 
-module.exports = {
+export {
   ChangePasswordValidator,
   UpdateInfoValidator,
   LoginValidator,

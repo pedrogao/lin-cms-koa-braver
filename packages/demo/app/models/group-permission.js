@@ -1,5 +1,5 @@
-const { Model, Sequelize } = require('sequelize')
-const sequelize = require('../libs/db')
+import { Model, Sequelize } from 'sequelize';
+import sequelize from '../libs/db';
 
 class GroupPermission extends Model {
   
@@ -37,3 +37,7 @@ GroupPermission.init(
     ]
   }
 )
+
+export {
+  GroupPermission as GroupPermissionModel
+}

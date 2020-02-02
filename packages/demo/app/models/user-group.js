@@ -1,5 +1,5 @@
-const { Model, Sequelize } = require('sequelize')
-const sequelize = require('../libs/db')
+import { Model, Sequelize } from 'sequelize';
+import sequelize from '../libs/db';
 
 class UserGroup extends Model {
   
@@ -38,6 +38,6 @@ UserGroup.init(
   }
 )
 
-module.exports = {
-  UserGroupModel: UserGroup,
+export {
+  UserGroup as UserGroupModel
 }
