@@ -99,7 +99,7 @@ class UserDao {
         user_id: user.id
       }
     })
-    const groupIds = userGroup.map(v => v.id)
+    const groupIds = userGroup.map(v => v.group_id)
     const groups = await GroupModel.findAll({
       where: {
         id: {
@@ -140,31 +140,6 @@ class UserDao {
     set(user, 'admin', group ? true : false)
 
     return user
-  }
-
-  splitAuths (auths) {
-    let tmp = {};
-    auths.forEach(au => {
-      if (!has(tmp, au['module'])) {
-        tmp[au['module']] = [
-          {
-            module: au['module'],
-            auth: au['auth']
-          }
-        ];
-      } else {
-        tmp[au['module']].push({
-          module: au['module'],
-          auth: au['auth']
-        });
-      }
-    });
-    const aus = Object.keys(tmp).map(key => {
-      let tm1 = Object.create(null);
-      set(tm1, key, tmp[key]);
-      return tm1;
-    });
-    return aus;
   }
 
   async registerUser (v) {

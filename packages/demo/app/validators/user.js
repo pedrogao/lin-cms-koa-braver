@@ -83,7 +83,10 @@ class UpdateInfoValidator extends LinValidator {
     ];
     this.avatar = [
       new Rule('isOptional'),
-      new Rule('isURL', '头像的url链接不符合l规范，请输入正确的url')
+      new Rule('isLength', '头像的url长度必须在0~500之间', {
+        min: 0,
+        max: 500
+      })
     ];
   }
 }

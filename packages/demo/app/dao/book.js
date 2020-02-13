@@ -33,6 +33,7 @@ class BookDao {
     });
     return books;
   }
+
   async createBook (v) {
     const book = await Book.findOne({
       where: {

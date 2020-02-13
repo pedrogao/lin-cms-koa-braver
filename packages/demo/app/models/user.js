@@ -122,7 +122,7 @@ class User extends Model {
     if (has(this, 'groups')) {
       return { ...origin, groups: get(this, 'groups', []) };
     } else if (has(this, 'permissions')) {
-      unset(origin, 'nickname')
+      unset(origin, 'username')
       return { ...origin, admin: get(this, 'admin', false), permissions: get(this, 'permissions', [])}
     }
     // if (has(this, 'auths')) {

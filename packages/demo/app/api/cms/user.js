@@ -54,7 +54,9 @@ user.linPost(
       v.get('body.username'),
       v.get('body.password')
     );
-    const { accessToken, refreshToken } = getTokens(user);
+    const { accessToken, refreshToken } = getTokens({
+      id: user.user_id
+    });
     ctx.json({
       access_token: accessToken,
       refresh_token: refreshToken

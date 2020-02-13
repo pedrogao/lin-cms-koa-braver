@@ -6,7 +6,7 @@ class Group extends Model {
   toJSON() {
     const origin = {
       id: this.id,
-      name: this.id,
+      name: this.name,
       info: this.info,
     }
     if (has(this, 'permissions')) {

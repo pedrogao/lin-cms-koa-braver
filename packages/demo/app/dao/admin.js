@@ -52,6 +52,23 @@ class AdminDao {
     }
     let { rows, count } = await UserModel.findAndCountAll(condition);
 
+    for (let user of rows) {
+      const userGroup = await UserGroupModel.findAll({
+        where: {
+          user_id: user.id
+        }
+      })
+      const groupIds = userGroup.map(v => v.group_id)
+      const groups = await GroupModel.findAll({
+        where: {
+          id: {
+            [Op.in]: groupIds
+          }
+        }
+      })
+      set(user, 'groups', groups);
+    }
+
     return {
       users: rows,
       total: count
@@ -87,7 +104,7 @@ class AdminDao {
     }
     let transaction;
     try {
-      transaction = await db.transaction();
+      transaction = await sequelize.transaction();
       await user.destroy({
         transaction
       });

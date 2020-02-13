@@ -30,7 +30,7 @@ class LogDao {
     const start = v.get('query.page');
     const count1 = v.get('query.count');
     let condition = {};
-    v.get('query.name') && set(condition, 'user_name', v.get('query.name'));
+    v.get('query.name') && set(condition, 'username', v.get('query.name'));
     v.get('query.start') &&
       v.get('query.end') &&
       set(condition, 'create_time', {
