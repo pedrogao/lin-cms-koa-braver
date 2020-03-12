@@ -78,8 +78,7 @@ class AdminDao {
   async changeUserPassword (ctx, v) {
     const user = await UserModel.findOne({
       where: {
-        id: v.get('path.id'),
-        delete_time: null
+        id: v.get('path.id')
       }
     });
     if (!user) {
@@ -93,8 +92,7 @@ class AdminDao {
   async deleteUser (ctx, id) {
     const user = await UserModel.findOne({
       where: {
-        id: id,
-        delete_time: null
+        id
       }
     });
     if (!user) {
@@ -130,7 +128,8 @@ class AdminDao {
     const user = await UserModel.findByPk(v.get('path.id'))
     if (!user) {
       throw new NotFound({
-        msg: '用户不存在'
+        msg: '用户不存在',
+        errorCode: 10024
       });
     }
     for (const id of (v.get('body.group_ids') || [])) {
@@ -143,8 +142,8 @@ class AdminDao {
       }
       if (!group) {
         throw new NotFound({
-          msg: '分组不存在',
-          errorCode: 10024
+          msg: '不可将用户分配给不存在的分组',
+          errorCode: 10077
         });
       }
     }
@@ -287,16 +286,19 @@ class AdminDao {
     const group = await GroupModel.findByPk(id);
     if (!group) {
       throw new NotFound({
-        msg: '分组不存在，删除失败'
+        msg: '分组不存在',
+        errorCode: 10024
       });
     }
     if (group.name === 'root') {
       throw new Forbidden({
-        msg: 'root分组不可删除'
+        msg: 'root分组不可删除',
+        errorCode: 10074
       });
     } else if (group.name === 'guest') {
       throw new Forbidden({
-        msg: 'guest分组不可删除'
+        msg: 'guest分组不可删除',
+        errorCode: 10075
       });
     }
 

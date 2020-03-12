@@ -82,7 +82,7 @@ class Loader {
         // const conf = get(mod, "default");
         const newConf = {};
         lodash_1.set(newConf, name, Object.assign(Object.assign({}, mod), incomingConf));
-        this.app.context.config.getConfigFromObj(newConf);
+        config_1.config.getConfigFromObj(newConf);
     }
     /**
      * 加载主应用中的所有路由

@@ -78,7 +78,7 @@ class RemovePermissionsValidator extends LinValidator {
 
   validatePermissionIds (data) {
     const ids = data.body.permission_ids;
-    if (validator.isEmpty(ids)) {
+    if (!ids) {
       return [false, '请输入permission_ids字段']
     }
     if (!Array.isArray(ids)) {
@@ -104,7 +104,7 @@ class DispatchPermissionsValidator extends LinValidator {
 
   validatePermissionIds (data) {
     const ids = data.body.permission_ids;
-    if (validator.isEmpty(ids)) {
+    if (!ids) {
       return [false, '请输入permission_ids字段']
     }
     if (!Array.isArray(ids)) {

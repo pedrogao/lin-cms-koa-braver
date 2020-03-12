@@ -10,8 +10,7 @@ class UserIdentity extends Model {
   static async verify(username, password) {
     const user = await this.findOne({where: {
         identity_type: type,
-        identifier: username,
-        delete_time: null
+        identifier: username
     }})
     if (!user) {
       throw new NotFound({msg: '用户不存在', errorCode: 10021});
@@ -32,8 +31,7 @@ class UserIdentity extends Model {
   static async changePassword(currentUser, oldPassword, newPassword) {
     const user = await this.findOne({where: {
       identity_type: type,
-      identifier: currentUser.username,
-      delete_time: null
+      identifier: currentUser.username
     }})
     if (!user) {
       throw new NotFound({msg: '用户不存在', errorCode: 10021});
@@ -50,8 +48,7 @@ class UserIdentity extends Model {
   static async resetPassword(currentUser, newPassword) {
     const user = await this.findOne({where: {
       identity_type: type,
-      identifier: currentUser.username,
-      delete_time: null
+      identifier: currentUser.username
     }});
     if (!user) {
       throw new NotFound({msg: '用户不存在', errorCode: 10021});
@@ -116,8 +113,6 @@ class User extends Model {
       nickname: this.nickname,
       email: this.email,
       avatar: this.avatar,
-      // create_time: this.createTime,
-      // update_time: this.updateTime
     };
     if (has(this, 'groups')) {
       return { ...origin, groups: get(this, 'groups', []) };
@@ -125,12 +120,6 @@ class User extends Model {
       unset(origin, 'username')
       return { ...origin, admin: get(this, 'admin', false), permissions: get(this, 'permissions', [])}
     }
-    // if (has(this, 'auths')) {
-    //   return { ...origin, auths: get(this, 'auths', []) };
-    // } else if (has(this, 'groupName')) {
-    //   return { ...origin, group_name: get(this, 'groupName', '') };
-    // } else {
-    // }
     return origin;
   }
 }
@@ -144,7 +133,6 @@ User.init({
   username: {
     type: Sequelize.STRING({ length: 24 }),
     allowNull: false,
-    unique: true,
     comment: '用户名，唯一'
   },
   nickname: {
@@ -161,11 +149,22 @@ User.init({
   },
   email: {
     type: Sequelize.STRING({ length: 100 }),
-    unique: true,
     allowNull: true
   },
 },{
   sequelize,
+  indexes: [
+    {
+      name: 'username_del',
+      unique: true,
+      fields: ['username', 'delete_time']
+    },
+    {
+      name: 'email_del',
+      unique: true,
+      fields: ['email', 'delete_time']
+    }
+  ],
   modelName: 'user',
   tableName: 'lin_user',
   createdAt: 'create_time',

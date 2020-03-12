@@ -34,6 +34,13 @@ Group.init({
   }
 },{
   sequelize,
+  indexes: [
+    {
+      name: 'name_del',
+      unique: true,
+      fields: ['name', 'delete_time']
+    },
+  ],
   tableName: 'lin_group',
   modelName: 'group',
   createdAt: 'create_time',

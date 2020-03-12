@@ -80,7 +80,7 @@ admin.linPut(
 
 admin.linDelete(
   'deleteUser',
-  '/user/:id',
+  '/:id',
   {
     auth: '删除用户',
     module: '管理员',

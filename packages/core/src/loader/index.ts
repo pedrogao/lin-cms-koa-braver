@@ -86,7 +86,7 @@ export class Loader {
     // const conf = get(mod, "default");
     const newConf = {};
     set(newConf, name, { ...mod, ...incomingConf });
-    this.app.context.config.getConfigFromObj(newConf);
+    config.getConfigFromObj(newConf);
   }
 
   /**

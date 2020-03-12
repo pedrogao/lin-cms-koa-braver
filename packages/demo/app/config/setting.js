@@ -13,6 +13,14 @@ module.exports = {
   refreshExp: 60 * 60 * 24 * 30,
   // 暂不启用插件
   pluginPath: {
-
+    // // plugin name
+    // poem: {
+    //   // determine a plugin work or not
+    //   enable: true,
+    //   // path of the plugin
+    //   path: "app/plugins/poem",
+    //   // other config
+    //   limit: 2
+    // }
   }
 };

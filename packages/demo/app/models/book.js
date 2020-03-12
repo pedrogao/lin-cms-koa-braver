@@ -11,7 +11,6 @@ class Book extends Model {
       author: this.author,
       summary: this.summary,
       image: this.image,
-      create_time: this.createTime
     };
     return origin;
   }

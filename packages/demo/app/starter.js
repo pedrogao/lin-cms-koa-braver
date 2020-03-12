@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { config } = require('@pedro/core')
+const { config } = require('@pedro/core/lib/config')
 
 // router.post('/cms/file', async ctx => {
 //   ctx.body = 'Hello World';

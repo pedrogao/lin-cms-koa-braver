@@ -42,12 +42,18 @@ File.init(
     md5: {
       type: Sequelize.STRING(40),
       allowNull: true,
-      unique: true,
       comment: '图片md5值，防止上传重复图片'
     }
   },
   {
     sequelize,
+    indexes: [
+      {
+        name: 'md5_del',
+        unique: true,
+        fields: ['md5', 'delete_time']
+      },
+    ],
     tableName: 'lin_file',
     modelName: 'file',
     createdAt: 'create_time',

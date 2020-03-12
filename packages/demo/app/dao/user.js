@@ -1,7 +1,8 @@
-import { RepeatException, generate, NotFound, Forbidden } from '@pedro/core';
+import { RepeatException, generate, NotFound, Forbidden, routeMetaInfo } from '@pedro/core';
 import { UserModel, UserIdentityModel, identityType } from '../models/user';
 import { UserGroupModel } from '../models/user-group';
 import { GroupPermissionModel } from '../models/group-permission';
+import { PermissionModel } from '../models/permission'
 import { GroupModel } from '../models/group';
 
 import sequelize from '../libs/db';
@@ -119,17 +120,8 @@ class UserDao {
       }
     })
     const groupIds = userGroup.map(v => v.group_id)
-    const groupPermission = await GroupPermissionModel.findAll({
-      where: {
-        group_id: {
-          [Op.in]: groupIds
-        }
-      }
-    })
-    const permissions = uniq(groupPermission.map(v => v.permission_id))
-    set(user, 'permissions', permissions)
 
-    const group = await GroupModel.findOne({
+    const root = await GroupModel.findOne({
       where: {
         name: 'root',
         id: {
@@ -137,7 +129,34 @@ class UserDao {
         }
       }
     });
-    set(user, 'admin', group ? true : false)
+
+    set(user, 'admin', root ? true : false)
+
+    let permissions = []
+
+    if (root) {
+      permissions = await PermissionModel.findAll()
+    } else {
+      const groupPermission = await GroupPermissionModel.findAll({
+        where: {
+          group_id: {
+            [Op.in]: groupIds
+          }
+        }
+      })
+      
+      const permissionIds = uniq(groupPermission.map(v => v.permission_id))
+  
+      permissions = await PermissionModel.findAll({
+        where: {
+          id: {
+            [Op.in]: permissionIds
+          }
+        }
+      });
+    }
+
+    set(user, 'permissions', this.formatPermissions(permissions))
 
     return user
   }
@@ -200,6 +219,29 @@ class UserDao {
       if (transaction) await transaction.rollback();
     }
     return true;
+  }
+
+  formatPermissions(permissions) {
+    const map = {};
+    permissions.forEach(v => {
+      const module = v.module;
+      if (has(map, module)) {
+        map[module].push({
+          permission: v.name,
+          module,
+        });
+      } else {
+        set(map, module, [{
+          permission: v.name,
+          module,
+        }]);
+      }
+    });
+    return Object.keys(map).map(k => {
+      const tmp = Object.create(null);
+      set(tmp, k, map[k]);
+      return tmp;
+    })
   }
 }
 
