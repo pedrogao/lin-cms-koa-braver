@@ -1,5 +1,5 @@
 import { config } from '@pedro/core';
-import { Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize';
 
 /**
  * 数据库名，默认lin-cms
@@ -24,7 +24,7 @@ const options = config.getItem('db', {});
 /**
  * 全局的 Sequelize 实例
  */
-export const sequelize = new Sequelize(database,username,password,{
+export const sequelize = new Sequelize(database, username, password, {
   ...options
 });
 

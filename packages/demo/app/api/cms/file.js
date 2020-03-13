@@ -17,4 +17,4 @@ file.linPost('upload', '/', {}, loginRequired, async ctx => {
   ctx.json(arr);
 });
 
-export { file }
+export { file };

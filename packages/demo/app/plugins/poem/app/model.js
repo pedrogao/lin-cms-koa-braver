@@ -1,7 +1,7 @@
 import { InfoCrudMixin } from '@pedro/core';
 import { merge } from 'lodash';
 import { Sequelize, Model } from 'sequelize';
-import sequelize from '../../../libs/db'
+import sequelize from '../../../libs/db';
 
 const { config } = require('@pedro/core/lib/config');
 
@@ -22,7 +22,7 @@ class Poem extends Model {
       delete_time: null
     };
     validator.get('query.author') &&
-      (condition['author'] = validator.get('query.author'));
+      (condition.author = validator.get('query.author'));
     const poems = await Poem.findAll({
       where: {
         delete_time: null
@@ -38,12 +38,12 @@ class Poem extends Model {
     const authors = await sequelize.query(
       'select author from poem group by author having count(author)>0'
     );
-    let res = authors[0].map(it => it['author']);
+    const res = authors[0].map(it => it.author);
     return res;
   }
 
   toJSON () {
-    let origin = {
+    const origin = {
       id: this.id,
       title: this.title,
       author: this.author,
@@ -83,7 +83,7 @@ Poem.init(
       allowNull: false,
       comment: '内容，以/来分割每一句，以|来分割宋词的上下片',
       get () {
-        let raw = this.getDataValue('content');
+        const raw = this.getDataValue('content');
         /**
          * @type Array
          */
@@ -108,4 +108,4 @@ Poem.init(
   )
 );
 
-export { Poem }
+export { Poem };

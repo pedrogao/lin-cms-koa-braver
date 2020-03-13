@@ -3,7 +3,7 @@ import {
   RegisterValidator,
   LoginValidator,
   UpdateInfoValidator,
-  ChangePasswordValidator,
+  ChangePasswordValidator
 } from '../../validators/user';
 
 import {
@@ -12,7 +12,7 @@ import {
   refreshTokenRequiredWithUnifyException
 } from '../../middleware/jwt';
 import { UserIdentityModel } from '../../models/user';
-import { logger } from '../../middleware/logger'
+import { logger } from '../../middleware/logger';
 import { UserDao } from '../../dao/user';
 
 const user = new LinRouter({
@@ -50,7 +50,7 @@ user.linPost(
   },
   async ctx => {
     const v = await new LoginValidator().validate(ctx);
-    let user = await UserIdentityModel.verify(
+    const user = await UserIdentityModel.verify(
       v.get('body.username'),
       v.get('body.password')
     );
@@ -92,12 +92,12 @@ user.linPut(
   },
   loginRequired,
   async ctx => {
-    let user = ctx.currentUser;
+    const user = ctx.currentUser;
     const v = await new ChangePasswordValidator().validate(ctx);
     await UserIdentityModel.changePassword(
       user,
       v.get('body.old_password'),
-      v.get('body.new_password'),
+      v.get('body.new_password')
     );
     ctx.success({
       msg: '密码修改成功'
@@ -115,7 +115,7 @@ user.linGet(
   },
   refreshTokenRequiredWithUnifyException,
   async ctx => {
-    let user = ctx.currentUser;
+    const user = ctx.currentUser;
     const { accessToken, refreshToken } = getTokens(user);
     ctx.json({
       access_token: accessToken,
@@ -134,7 +134,7 @@ user.linGet(
   },
   loginRequired,
   async ctx => {
-    let user = await userDao.getPermissions(ctx);
+    const user = await userDao.getPermissions(ctx);
     ctx.json(user);
   }
 );
@@ -149,9 +149,9 @@ user.linGet(
   },
   loginRequired,
   async ctx => {
-    let info = await userDao.getInformation(ctx)
+    const info = await userDao.getInformation(ctx);
     ctx.json(info);
   }
 );
 
-export { user }
+export { user };

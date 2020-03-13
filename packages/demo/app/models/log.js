@@ -2,8 +2,8 @@ import sequelize from '../libs/db';
 import { Model, Sequelize } from 'sequelize';
 
 class Log extends Model {
-  toJSON() {
-    let origin = {
+  toJSON () {
+    const origin = {
       id: this.id,
       message: this.message,
       time: this.time,
@@ -17,7 +17,7 @@ class Log extends Model {
     return origin;
   }
 
-  static createLog(args, commit) {
+  static createLog (args, commit) {
     const log = Log.build(args);
     commit && log.save();
     return log;
@@ -63,18 +63,16 @@ Log.init(
     deletedAt: 'delete_time',
     paranoid: true,
     getterMethods: {
-      createTime() {
+      createTime () {
         // @ts-ignore
         return new Date(this.getDataValue('create_time')).getTime();
       },
-      updateTime() {
+      updateTime () {
         // @ts-ignore
         return new Date(this.getDataValue('update_time')).getTime();
       }
     }
   }
-)
+);
 
-export {
-  Log as LogModel
-}
+export { Log as LogModel };

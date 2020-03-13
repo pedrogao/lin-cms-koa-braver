@@ -28,7 +28,7 @@ class ResetPasswordValidator extends PositiveIdValidator {
     if (!data.body.new_password || !data.body.confirm_password) {
       return [false, '两次输入的密码不一致，请重新输入'];
     }
-    let ok = data.body.new_password === data.body.confirm_password;
+    const ok = data.body.new_password === data.body.confirm_password;
     if (ok) {
       return ok;
     } else {
@@ -38,10 +38,6 @@ class ResetPasswordValidator extends PositiveIdValidator {
 }
 
 class UpdateUserInfoValidator extends PositiveIdValidator {
-  constructor () {
-    super();
-  }
-
   validateGroupIds (data) {
     const ids = data.body.group_ids;
     if (isOptional(ids)) {
@@ -79,7 +75,7 @@ class RemovePermissionsValidator extends LinValidator {
   validatePermissionIds (data) {
     const ids = data.body.permission_ids;
     if (!ids) {
-      return [false, '请输入permission_ids字段']
+      return [false, '请输入permission_ids字段'];
     }
     if (!Array.isArray(ids)) {
       return [false, '每个id值必须为正整数'];
@@ -105,7 +101,7 @@ class DispatchPermissionsValidator extends LinValidator {
   validatePermissionIds (data) {
     const ids = data.body.permission_ids;
     if (!ids) {
-      return [false, '请输入permission_ids字段']
+      return [false, '请输入permission_ids字段'];
     }
     if (!Array.isArray(ids)) {
       return [false, '每个id值必须为正整数'];
@@ -165,5 +161,5 @@ export {
   DispatchPermissionValidator,
   DispatchPermissionsValidator,
   NewGroupValidator,
-  RemovePermissionsValidator,
+  RemovePermissionsValidator
 };

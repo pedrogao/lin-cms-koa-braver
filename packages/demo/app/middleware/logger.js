@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { routeMetaInfo, assert } from '@pedro/core';
-import { LogModel } from '../models/log'
+import { LogModel } from '../models/log';
 
 const REG_XP = /(?<=\{)[^}]*(?=\})/g;
 
@@ -27,7 +27,7 @@ const REG_XP = /(?<=\{)[^}]*(?=\})/g;
  * );
  * ```
  */
-export const logger = (template) => {
+export const logger = template => {
   return async (ctx, next) => {
     await next();
     // 取数据，写入到日志中
@@ -35,7 +35,7 @@ export const logger = (template) => {
   };
 };
 
-function writeLog(template, ctx) {
+function writeLog (template, ctx) {
   const message = parseTemplate(
     template,
     ctx.currentUser,
@@ -68,25 +68,20 @@ function writeLog(template, ctx) {
  * 通过当前的路由名找到对应的权限录入信息
  * @param ctx koa 的 context
  */
-function findAuthAndModule(ctx) {
+function findAuthAndModule (ctx) {
   const routeName = ctx._matchedRouteName || ctx.routerName;
   const endpoint = `${ctx.method} ${routeName}`;
   return routeMetaInfo.get(endpoint);
 }
 
-/**f
+/** f
  * 解析模板
  * @param template 消息模板
  * @param user 用户
  * @param response
  * @param request
  */
-function parseTemplate(
-  template,
-  user,
-  response,
-  request
-) {
+function parseTemplate (template, user, response, request) {
   const res = REG_XP.exec(template);
   if (res) {
     res.forEach(item => {

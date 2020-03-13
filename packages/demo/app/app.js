@@ -20,8 +20,6 @@ function indexPage (app) {
   });
 }
 
-
-
 /**
  * 跨域支持
  * @param app koa实例
@@ -66,14 +64,14 @@ function applyDefaultExtends (app) {
 function applyLoader (app) {
   const pluginPath = config.getItem('pluginPath');
   const loader = new Loader(pluginPath, app);
-  loader.initLoader()
+  loader.initLoader();
 }
 
 /**
  * jwt
  * @param app koa实例
  */
-function applyJwt(app) {
+function applyJwt (app) {
   const secret = config.getItem('secret');
   jwt.initApp(app, secret);
 }
@@ -81,7 +79,7 @@ function applyJwt(app) {
 /**
  * 初始化Koa实例
  */
-async function createApp() {
+async function createApp () {
   const app = new Koa();
   applyBodyParse(app);
   applyCors(app);
@@ -94,10 +92,10 @@ async function createApp() {
   applyJwt(app);
   const lin = new Lin();
   await lin.initApp(app, true);
-  await PermissionModel.initPermission()
+  await PermissionModel.initPermission();
   indexPage(app);
   multipart(app);
-  return app
+  return app;
 }
 
 module.exports = { createApp };

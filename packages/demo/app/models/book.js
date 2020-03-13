@@ -5,12 +5,12 @@ import sequelize from '../libs/db';
 
 class Book extends Model {
   toJSON () {
-    let origin = {
+    const origin = {
       id: this.id,
       title: this.title,
       author: this.author,
       summary: this.summary,
-      image: this.image,
+      image: this.image
     };
     return origin;
   }
@@ -51,4 +51,4 @@ Book.init(
   )
 );
 
-export { Book }
+export { Book };

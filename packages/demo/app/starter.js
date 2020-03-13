@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { config } = require('@pedro/core/lib/config')
+const { config } = require('@pedro/core/lib/config');
 
 // router.post('/cms/file', async ctx => {
 //   ctx.body = 'Hello World';
@@ -34,9 +34,9 @@ const run = async () => {
   const app = await createApp();
   const port = config.getItem('port');
   app.listen(port, () => {
-    console.log(`listening at http://localhost:${port}`)
-  })
-}
+    console.log(`listening at http://localhost:${port}`);
+  });
+};
 
 // 启动应用
 run();

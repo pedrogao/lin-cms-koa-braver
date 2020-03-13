@@ -1,9 +1,7 @@
 import { Model, Sequelize } from 'sequelize';
 import sequelize from '../libs/db';
 
-class UserGroup extends Model {
-  
-}
+class UserGroup extends Model {}
 
 UserGroup.init(
   {
@@ -36,8 +34,6 @@ UserGroup.init(
       }
     ]
   }
-)
+);
 
-export {
-  UserGroup as UserGroupModel
-}
+export { UserGroup as UserGroupModel };

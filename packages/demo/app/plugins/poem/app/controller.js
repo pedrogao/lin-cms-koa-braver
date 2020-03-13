@@ -21,4 +21,4 @@ api.get('/authors', async ctx => {
   ctx.json(authors);
 });
 
-export { api }
+export { api };

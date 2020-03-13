@@ -7,14 +7,14 @@ class LogDao {
   async getLogs (v) {
     const start = v.get('query.page');
     const count1 = v.get('query.count');
-    let condition = {};
+    const condition = {};
     v.get('query.name') && set(condition, 'user_name', v.get('query.name'));
     v.get('query.start') &&
       v.get('query.end') &&
       set(condition, 'create_time', {
         [Sequelize.Op.between]: [v.get('query.start'), v.get('query.end')]
       });
-    let { rows, count } = await LogModel.findAndCountAll({
+    const { rows, count } = await LogModel.findAndCountAll({
       where: Object.assign({}, condition),
       offset: start * count1,
       limit: count1,
@@ -29,14 +29,14 @@ class LogDao {
   async searchLogs (v, keyword) {
     const start = v.get('query.page');
     const count1 = v.get('query.count');
-    let condition = {};
+    const condition = {};
     v.get('query.name') && set(condition, 'username', v.get('query.name'));
     v.get('query.start') &&
       v.get('query.end') &&
       set(condition, 'create_time', {
         [Sequelize.Op.between]: [v.get('query.start'), v.get('query.end')]
       });
-    let { rows, count } = await LogModel.findAndCountAll({
+    const { rows, count } = await LogModel.findAndCountAll({
       where: Object.assign({}, condition, {
         message: {
           [Sequelize.Op.like]: `%${keyword}%`
@@ -62,9 +62,9 @@ class LogDao {
         }
       }
     );
-    const arr = Array.from(logs[0].map(it => it['names']));
+    const arr = Array.from(logs[0].map(it => it.names));
     return arr;
   }
 }
 
-export { LogDao }
+export { LogDao };

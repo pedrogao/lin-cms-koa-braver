@@ -76,4 +76,4 @@ class BookDao {
   }
 }
 
-export { BookDao }
+export { BookDao };

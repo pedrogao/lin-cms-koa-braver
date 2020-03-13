@@ -1,4 +1,4 @@
-import '../../helper/initial'
+import '../../helper/initial';
 import request from 'supertest';
 import { createApp } from '../../../app/app';
 import sequelize from '../../../app/libs/db';
@@ -47,7 +47,7 @@ describe('user1.test.js', () => {
         username: 'root',
         password: '123456'
       });
-      saveTokens(response.body);
+    saveTokens(response.body);
     expect(response.status).toBe(200);
     expect(response.type).toMatch(/json/);
   });

@@ -1,4 +1,4 @@
-import { LinRouter, Failed } from '@pedro/core';
+import { LinRouter, Failed, NotFound } from '@pedro/core';
 import {
   AdminUsersValidator,
   ResetPasswordValidator,
@@ -8,8 +8,11 @@ import {
   DispatchPermissionValidator,
   DispatchPermissionsValidator,
   RemovePermissionsValidator
-} from '../../validators/admin'
-import { PositiveIdValidator, PaginateValidator } from '../../validators/common'
+} from '../../validators/admin';
+import {
+  PositiveIdValidator,
+  PaginateValidator
+} from '../../validators/common';
 
 import { adminRequired } from '../../middleware/jwt';
 import { AdminDao } from '../../dao/admin';
@@ -30,8 +33,8 @@ admin.linGet(
   },
   adminRequired,
   async ctx => {
-    const permissions = await adminDao.getAllPermissions()
-    ctx.json(permissions)
+    const permissions = await adminDao.getAllPermissions();
+    ctx.json(permissions);
   }
 );
 
@@ -50,13 +53,13 @@ admin.linGet(
       v.get('query.group_id'),
       v.get('query.page'),
       v.get('query.count')
-    )
+    );
     ctx.json({
       items: users,
       total,
       count: v.get('query.count'),
       page: v.get('query.page')
-    })
+    });
   }
 );
 
@@ -140,7 +143,7 @@ admin.linGet(
       items: groups,
       total: total,
       page: v.get('query.page'),
-      count: v.get('query.count'),
+      count: v.get('query.count')
     });
   }
 );
@@ -155,7 +158,7 @@ admin.linGet(
   },
   adminRequired,
   async ctx => {
-    const groups = await adminDao.getAllGroups()
+    const groups = await adminDao.getAllGroups();
     if (!groups || groups.length < 1) {
       throw new NotFound({
         msg: '未找到任何权限组'
@@ -295,4 +298,4 @@ admin.linPost(
   }
 );
 
-export { admin }
+export { admin };

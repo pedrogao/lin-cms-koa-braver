@@ -4,7 +4,7 @@ import {
   parseHeader,
   RefreshException,
   TokenType,
-  routeMetaInfo,
+  routeMetaInfo
 } from '@pedro/core';
 import { UserGroupModel } from '../models/user-group';
 import { GroupModel } from '../models/group';
@@ -15,13 +15,13 @@ import { Op } from 'sequelize';
 import { uniq } from 'lodash';
 
 // 是否超级管理员
-async function isAdmin(ctx) {
+async function isAdmin (ctx) {
   const userGroup = await UserGroupModel.findAll({
     where: {
       user_id: ctx.currentUser.id
     }
   });
-  const groupIds = userGroup.map(v => v.group_id)
+  const groupIds = userGroup.map(v => v.group_id);
   const is = await GroupModel.findOne({
     where: {
       name: 'root',
@@ -30,17 +30,17 @@ async function isAdmin(ctx) {
       }
     }
   });
-  return is
+  return is;
 }
 
 /**
  * 将 user 挂在 ctx 上
  */
-async function mountUser(ctx) {
+async function mountUser (ctx) {
   const { identity } = parseHeader(ctx);
   const user = await UserModel.findByPk(identity);
   if (!user) {
-    ctx.throw(new NotFound({ msg: '用户不存在' }));
+    ctx.throw(new NotFound({ msg: '用户不存在', errorCode: 10021 }));
   }
   // 将user挂在ctx上
   ctx.currentUser = user;
@@ -49,7 +49,7 @@ async function mountUser(ctx) {
 /**
  * 守卫函数，非超级管理员不可访问
  */
-async function adminRequired(ctx, next) {
+async function adminRequired (ctx, next) {
   if (ctx.request.method !== 'OPTIONS') {
     await mountUser(ctx);
 
@@ -66,9 +66,9 @@ async function adminRequired(ctx, next) {
 /**
  * 守卫函数，用户登陆即可访问
  */
-async function loginRequired(ctx, next) {
+async function loginRequired (ctx, next) {
   if (ctx.request.method !== 'OPTIONS') {
-    await mountUser(ctx)
+    await mountUser(ctx);
 
     await next();
   } else {
@@ -79,13 +79,13 @@ async function loginRequired(ctx, next) {
 /**
  * 守卫函数，用户刷新令牌，统一异常
  */
-async function refreshTokenRequiredWithUnifyException(ctx, next) {
+async function refreshTokenRequiredWithUnifyException (ctx, next) {
   if (ctx.request.method !== 'OPTIONS') {
     try {
       const { identity } = parseHeader(ctx, TokenType.REFRESH);
       const user = await UserModel.findByPk(identity);
       if (!user) {
-        ctx.throw(new NotFound({ msg: '用户不存在' }));
+        ctx.throw(new NotFound({ msg: '用户不存在', errorCode: 10021 }));
       }
       // 将user挂在ctx上
       ctx.currentUser = user;
@@ -101,7 +101,7 @@ async function refreshTokenRequiredWithUnifyException(ctx, next) {
 /**
  * 守卫函数，用于权限组鉴权
  */
-async function groupRequired(ctx, next) {
+async function groupRequired (ctx, next) {
   if (ctx.request.method !== 'OPTIONS') {
     await mountUser(ctx);
 
@@ -118,7 +118,7 @@ async function groupRequired(ctx, next) {
             user_id: ctx.currentUser.id
           }
         });
-        const groupIds = userGroup.map(v => v.group_id)
+        const groupIds = userGroup.map(v => v.group_id);
         const groupPermission = await GroupPermissionModel.findAll({
           where: {
             group_id: {
@@ -155,4 +155,4 @@ export {
   loginRequired,
   groupRequired,
   refreshTokenRequiredWithUnifyException
-}
+};

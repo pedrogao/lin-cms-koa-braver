@@ -39,6 +39,4 @@ class LogFindValidator extends PaginateValidator {
   }
 }
 
-export {
-  LogFindValidator
-};
+export { LogFindValidator };

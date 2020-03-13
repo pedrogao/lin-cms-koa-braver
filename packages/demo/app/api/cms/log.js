@@ -54,7 +54,7 @@ log.linGet(
       total: total,
       items: rows,
       page: v.get('query.page'),
-      count: v.get('query.count'),
+      count: v.get('query.count')
     });
   }
 );
@@ -78,9 +78,9 @@ log.linGet(
       total: arr.length,
       items: arr,
       page: v.get('query.page'),
-      count: v.get('query.count'),
+      count: v.get('query.count')
     });
   }
 );
 
-export { log }
+export { log };

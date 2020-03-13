@@ -20,7 +20,4 @@ class CreateOrUpdateBookValidator extends LinValidator {
   }
 }
 
-export {
-  CreateOrUpdateBookValidator,
-  BookSearchValidator
-};
+export { CreateOrUpdateBookValidator, BookSearchValidator };

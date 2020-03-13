@@ -1,47 +1,47 @@
 import { NotFound, Forbidden } from '@pedro/core';
 import { PermissionModel } from '../models/permission';
-import { UserModel } from '../models/user';
+import { UserModel, UserIdentityModel } from '../models/user';
 import { GroupModel } from '../models/group';
-import { UserIdentityModel } from '../models/user';
+
 import { GroupPermissionModel } from '../models/group-permission';
 import { UserGroupModel } from '../models/user-group';
 
 import sequelize from '../libs/db';
-import  { Op } from 'sequelize';
+import { Op } from 'sequelize';
 import { has, set, get } from 'lodash';
 
 class AdminDao {
   async getAllPermissions () {
-    const permissions = await PermissionModel.findAll()
-    let result = Object.create(null)
+    const permissions = await PermissionModel.findAll();
+    const result = Object.create(null);
     permissions.forEach(v => {
       const item = {
         id: get(v, 'id'),
         name: get(v, 'name'),
         module: get(v, 'module')
-      }
+      };
       if (has(result, item.module)) {
-        result[item.module].push(item)
+        result[item.module].push(item);
       } else {
-        set(result, item.module, [item])
+        set(result, item.module, [item]);
       }
-    })
-    return result
+    });
+    return result;
   }
 
   async getUsers (groupId, page, count1) {
-    let userIds = []
-    let condition = {
+    let userIds = [];
+    const condition = {
       offset: page * count1,
-      limit: count1,
+      limit: count1
     };
     if (groupId) {
       const userGroup = await UserGroupModel.findAll({
         where: {
           group_id: groupId
         }
-      })
-      userIds = userGroup.map(v => v.user_id)
+      });
+      userIds = userGroup.map(v => v.user_id);
       Object.assign(condition, {
         where: {
           id: {
@@ -50,22 +50,22 @@ class AdminDao {
         }
       });
     }
-    let { rows, count } = await UserModel.findAndCountAll(condition);
+    const { rows, count } = await UserModel.findAndCountAll(condition);
 
-    for (let user of rows) {
+    for (const user of rows) {
       const userGroup = await UserGroupModel.findAll({
         where: {
           user_id: user.id
         }
-      })
-      const groupIds = userGroup.map(v => v.group_id)
+      });
+      const groupIds = userGroup.map(v => v.group_id);
       const groups = await GroupModel.findAll({
         where: {
           id: {
             [Op.in]: groupIds
           }
         }
-      })
+      });
       set(user, 'groups', groups);
     }
 
@@ -83,7 +83,8 @@ class AdminDao {
     });
     if (!user) {
       throw new NotFound({
-        msg: '用户不存在'
+        msg: '用户不存在',
+        errorCode: 10021
       });
     }
     await UserIdentityModel.resetPassword(user, v.get('body.new_password'));
@@ -97,7 +98,8 @@ class AdminDao {
     });
     if (!user) {
       throw new NotFound({
-        msg: '用户不存在'
+        msg: '用户不存在',
+        errorCode: 10021
       });
     }
     let transaction;
@@ -125,14 +127,14 @@ class AdminDao {
   }
 
   async updateUserInfo (ctx, v) {
-    const user = await UserModel.findByPk(v.get('path.id'))
+    const user = await UserModel.findByPk(v.get('path.id'));
     if (!user) {
       throw new NotFound({
         msg: '用户不存在',
-        errorCode: 10024
+        errorCode: 10021
       });
     }
-    for (const id of (v.get('body.group_ids') || [])) {
+    for (const id of v.get('body.group_ids') || []) {
       const group = await GroupModel.findByPk(id);
       if (group.name === 'root') {
         throw new Forbidden({
@@ -147,7 +149,7 @@ class AdminDao {
         });
       }
     }
-    
+
     let transaction;
     try {
       transaction = await sequelize.transaction();
@@ -156,8 +158,8 @@ class AdminDao {
           user_id: v.get('path.id')
         },
         transaction
-      })
-      for (const id of (v.get('body.group_ids') || [])) {
+      });
+      for (const id of v.get('body.group_ids') || []) {
         await UserGroupModel.create(
           {
             user_id: v.get('path.id'),
@@ -175,19 +177,20 @@ class AdminDao {
   }
 
   async getGroups (ctx, page, count1) {
-    let { rows, count } = await GroupModel.findAndCountAll({
+    const { rows, count } = await GroupModel.findAndCountAll({
       offset: page * count1,
-      limit: count1,
+      limit: count1
     });
 
     return {
       groups: rows,
       total: count
-    }
+    };
   }
 
   async getAllGroups () {
-    return await GroupModel.findAll();
+    const allGroups = await GroupModel.findAll();
+    return allGroups;
   }
 
   async getGroup (ctx, id) {
@@ -214,7 +217,7 @@ class AdminDao {
       }
     });
 
-    return set(group, 'permissions', permissions)
+    return set(group, 'permissions', permissions);
   }
 
   async createGroup (ctx, v) {
@@ -229,11 +232,11 @@ class AdminDao {
       });
     }
 
-    for (const id of (v.get('body.permission_ids') || [])) {
+    for (const id of v.get('body.permission_ids') || []) {
       const permission = await PermissionModel.findByPk(id);
       if (!permission) {
         throw new NotFound({
-          msg: '无法分配不存在的权限',
+          msg: '无法分配不存在的权限'
         });
       }
     }
@@ -252,7 +255,7 @@ class AdminDao {
         }
       );
 
-      for (const id of (v.get('body.permission_ids') || [])) {
+      for (const id of v.get('body.permission_ids') || []) {
         await GroupPermissionModel.create(
           {
             group_id: group.id,
@@ -269,7 +272,7 @@ class AdminDao {
     }
     return true;
   }
-  
+
   async updateGroup (ctx, v) {
     const group = await GroupModel.findByPk(v.get('path.id'));
     if (!group) {
@@ -281,7 +284,7 @@ class AdminDao {
     group.info = v.get('body.info');
     group.save();
   }
-  
+
   async deleteGroup (ctx, id) {
     const group = await GroupModel.findByPk(id);
     if (!group) {
@@ -321,7 +324,7 @@ class AdminDao {
         transaction
       });
       await transaction.commit();
-    } catch(error) {
+    } catch (error) {
       if (transaction) await transaction.rollback();
     }
   }
@@ -334,10 +337,12 @@ class AdminDao {
       });
     }
 
-    const permission = await PermissionModel.findByPk(v.get('body.permission_id'));
+    const permission = await PermissionModel.findByPk(
+      v.get('body.permission_id')
+    );
     if (!permission) {
       throw new NotFound({
-        msg: '无法分配不存在的权限',
+        msg: '无法分配不存在的权限'
       });
     }
 
@@ -346,7 +351,7 @@ class AdminDao {
         group_id: v.get('body.group_id'),
         permission_id: v.get('body.permission_id')
       }
-    })
+    });
     if (one) {
       throw new Forbidden({
         msg: '已有权限，不可重复添加'
@@ -355,7 +360,7 @@ class AdminDao {
     await GroupPermissionModel.create({
       group_id: v.get('body.group_id'),
       permission_id: v.get('body.permission_id')
-    })
+    });
   }
 
   async dispatchPermissions (ctx, v) {
@@ -369,7 +374,7 @@ class AdminDao {
       const permission = await PermissionModel.findByPk(id);
       if (!permission) {
         throw new NotFound({
-          msg: '无法分配不存在的权限',
+          msg: '无法分配不存在的权限'
         });
       }
     }
@@ -405,7 +410,7 @@ class AdminDao {
       const permission = await PermissionModel.findByPk(id);
       if (!permission) {
         throw new NotFound({
-          msg: '无法分配不存在的权限',
+          msg: '无法分配不存在的权限'
         });
       }
     }
@@ -421,4 +426,4 @@ class AdminDao {
   }
 }
 
-export { AdminDao }
+export { AdminDao };

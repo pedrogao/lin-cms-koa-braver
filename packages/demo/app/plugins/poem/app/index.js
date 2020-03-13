@@ -1,7 +1,4 @@
 import { api } from './controller';
 import { Poem } from './model';
 
-export {
-  Poem,
-  api
-}
+export { Poem, api };

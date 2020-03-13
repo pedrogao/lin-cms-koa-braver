@@ -1,9 +1,7 @@
 import { Model, Sequelize } from 'sequelize';
 import sequelize from '../libs/db';
 
-class GroupPermission extends Model {
-  
-}
+class GroupPermission extends Model {}
 
 GroupPermission.init(
   {
@@ -36,8 +34,6 @@ GroupPermission.init(
       }
     ]
   }
-)
+);
 
-export {
-  GroupPermission as GroupPermissionModel
-}
+export { GroupPermission as GroupPermissionModel };

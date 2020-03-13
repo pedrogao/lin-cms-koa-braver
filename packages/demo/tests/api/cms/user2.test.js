@@ -1,8 +1,8 @@
-import '../../helper/initial'
+import '../../helper/initial';
 import request from 'supertest';
 import { createApp } from '../../../app/app';
 import sequelize from '../../../app/libs/db';
-import { getToken } from '../../helper/token'
+import { getToken } from '../../helper/token';
 
 describe('user2.test.js', () => {
   let app;
@@ -53,7 +53,7 @@ describe('user2.test.js', () => {
   });
 
   test('测试/cms/user/register 输入不规范用户名', async () => {
-    const token = getToken()
+    const token = getToken();
     const response = await request(app.callback())
       .post('/cms/user/register')
       .auth(token, {
@@ -70,7 +70,7 @@ describe('user2.test.js', () => {
   });
 
   test('测试/cms/user/register 输入不规范分组id', async () => {
-    const token = getToken()
+    const token = getToken();
     const response = await request(app.callback())
       .post('/cms/user/register')
       .auth(token, {
@@ -106,7 +106,7 @@ describe('user2.test.js', () => {
   // });
 
   test('测试/cms/user/register 用户名重复错误', async () => {
-    const token = getToken()
+    const token = getToken();
     const response = await request(app.callback())
       .post('/cms/user/register')
       .auth(token, {
@@ -124,7 +124,7 @@ describe('user2.test.js', () => {
   });
 
   test('测试/cms/user/register 邮箱重复错误', async () => {
-    const token = getToken()
+    const token = getToken();
     const response = await request(app.callback())
       .post('/cms/user/register')
       .auth(token, {

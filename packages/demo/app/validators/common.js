@@ -21,7 +21,4 @@ class PaginateValidator extends LinValidator {
   }
 }
 
-export {
-  PaginateValidator,
-  PositiveIdValidator
-};
+export { PaginateValidator, PositiveIdValidator };

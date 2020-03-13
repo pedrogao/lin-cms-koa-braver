@@ -27,7 +27,7 @@ class RegisterValidator extends LinValidator {
     if (!data.body.password || !data.body.confirm_password) {
       return [false, '两次输入的密码不一致，请重新输入'];
     }
-    let ok = data.body.password === data.body.confirm_password;
+    const ok = data.body.password === data.body.confirm_password;
     if (ok) {
       return ok;
     } else {
@@ -107,7 +107,7 @@ class ChangePasswordValidator extends LinValidator {
     if (!data.body.new_password || !data.body.confirm_password) {
       return [false, '两次输入的密码不一致，请重新输入'];
     }
-    let ok = data.body.new_password === data.body.confirm_password;
+    const ok = data.body.new_password === data.body.confirm_password;
     if (ok) {
       return ok;
     } else {

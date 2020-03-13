@@ -2,7 +2,7 @@ import { Model, Sequelize } from 'sequelize';
 import sequelize from '../libs/db';
 
 class File extends Model {
-  static async createRecord(args, commit) {
+  static async createRecord (args, commit) {
     const record = File.build(args);
     commit && (await record.save());
     return record;
@@ -52,7 +52,7 @@ File.init(
         name: 'md5_del',
         unique: true,
         fields: ['md5', 'delete_time']
-      },
+      }
     ],
     tableName: 'lin_file',
     modelName: 'file',
@@ -61,18 +61,16 @@ File.init(
     deletedAt: 'delete_time',
     paranoid: true,
     getterMethods: {
-      createTime() {
+      createTime () {
         // @ts-ignore
         return new Date(this.getDataValue('create_time')).getTime();
       },
-      updateTime() {
+      updateTime () {
         // @ts-ignore
         return new Date(this.getDataValue('update_time')).getTime();
       }
     }
   }
-)
+);
 
-export {
-  File as FileModel
-}
+export { File as FileModel };

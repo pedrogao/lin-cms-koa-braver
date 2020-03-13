@@ -13,7 +13,7 @@ function getSafeParamId (ctx) {
 
 function isOptional (val) {
   // undefined , null , ""  , "    ", 皆通过
-  if (val === void 0) {
+  if (val === undefined) {
     return true;
   }
   if (val === null) {
@@ -25,4 +25,4 @@ function isOptional (val) {
   return false;
 }
 
-export { getSafeParamId, isOptional }
+export { getSafeParamId, isOptional };

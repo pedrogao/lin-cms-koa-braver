@@ -3,30 +3,33 @@ import { Model, Sequelize } from 'sequelize';
 import { routeMetaInfo } from '@pedro/core';
 
 class Permission extends Model {
-  toJSON() {
+  toJSON () {
     const origin = {
       id: this.id,
       name: this.name,
-      module: this.module,
+      module: this.module
     };
     return origin;
   }
 
-  static async initPermission() {
+  static async initPermission () {
     let transaction;
     try {
       transaction = await sequelize.transaction();
       const info = Array.from(routeMetaInfo.values());
-      const existence = await this.findAll()
+      const existence = await this.findAll();
       for (const { auth, module: moduleName } of info) {
         if (existence.find(v => v.name === auth && v.module === moduleName)) {
           continue;
         }
-        await this.create({
-          name: auth,
-          module: moduleName
-        }, { transaction });
-      };
+        await this.create(
+          {
+            name: auth,
+            module: moduleName
+          },
+          { transaction }
+        );
+      }
       await transaction.commit();
     } catch (error) {
       if (transaction) await transaction.rollback();
@@ -34,40 +37,41 @@ class Permission extends Model {
   }
 }
 
-Permission.init({
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  name: {
-    type: Sequelize.STRING({ length: 60 }),
-    comment: '权限名称，例如：访问首页',
-    allowNull: false
-  },
-  module: {
-    type: Sequelize.STRING({ length: 50 }),
-    comment: '权限所属模块，例如：人员管理',
-    allowNull: false
-  }
-},{
-  sequelize,
-  tableName: 'lin_permission',
-  modelName: 'permission',
-  createdAt: 'create_time',
-  updatedAt: 'update_time',
-  deletedAt: 'delete_time',
-  paranoid: true,
-  getterMethods: {
-    createTime() {
-      return new Date(this.getDataValue('create_time')).getTime();
+Permission.init(
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    updateTime() {
-      return new Date(this.getDataValue('update_time')).getTime();
+    name: {
+      type: Sequelize.STRING({ length: 60 }),
+      comment: '权限名称，例如：访问首页',
+      allowNull: false
+    },
+    module: {
+      type: Sequelize.STRING({ length: 50 }),
+      comment: '权限所属模块，例如：人员管理',
+      allowNull: false
+    }
+  },
+  {
+    sequelize,
+    tableName: 'lin_permission',
+    modelName: 'permission',
+    createdAt: 'create_time',
+    updatedAt: 'update_time',
+    deletedAt: 'delete_time',
+    paranoid: true,
+    getterMethods: {
+      createTime () {
+        return new Date(this.getDataValue('create_time')).getTime();
+      },
+      updateTime () {
+        return new Date(this.getDataValue('update_time')).getTime();
+      }
     }
   }
-})
+);
 
-export {
-  Permission as PermissionModel
-}
+export { Permission as PermissionModel };
