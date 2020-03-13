@@ -1,4 +1,4 @@
-import { LinRouter, Failed, NotFound } from '@pedro/core';
+import { LinRouter, Failed, NotFound } from 'lin-mizar';
 import {
   AdminUsersValidator,
   ResetPasswordValidator,
@@ -76,7 +76,8 @@ admin.linPut(
     const v = await new ResetPasswordValidator().validate(ctx);
     await adminDao.changeUserPassword(ctx, v);
     ctx.success({
-      msg: '密码修改成功'
+      msg: '密码修改成功',
+      errorCode: 2
     });
   }
 );
@@ -95,7 +96,8 @@ admin.linDelete(
     const id = v.get('path.id');
     await adminDao.deleteUser(ctx, id);
     ctx.success({
-      msg: '操作成功'
+      msg: '删除用户成功',
+      errorCode: 3
     });
   }
 );
@@ -113,7 +115,8 @@ admin.linPut(
     const v = await new UpdateUserInfoValidator().validate(ctx);
     await adminDao.updateUserInfo(ctx, v);
     ctx.success({
-      msg: '操作成功'
+      msg: '更新用户成功',
+      errorCode: 4
     });
   }
 );
@@ -202,7 +205,8 @@ admin.linPost(
       });
     }
     ctx.success({
-      msg: '新建分组成功'
+      msg: '新建分组成功',
+      errorCode: 13
     });
   }
 );
@@ -220,7 +224,8 @@ admin.linPut(
     const v = await new UpdateGroupValidator().validate(ctx);
     await adminDao.updateGroup(ctx, v);
     ctx.success({
-      msg: '更新分组成功'
+      msg: '更新分组成功',
+      errorCode: 5
     });
   }
 );
@@ -239,7 +244,8 @@ admin.linDelete(
     const id = v.get('path.id');
     await adminDao.deleteGroup(ctx, id);
     ctx.success({
-      msg: '删除分组成功'
+      msg: '删除分组成功',
+      errorCode: 6
     });
   }
 );
@@ -257,7 +263,8 @@ admin.linPost(
     const v = await new DispatchPermissionValidator().validate(ctx);
     await adminDao.dispatchPermission(ctx, v);
     ctx.success({
-      msg: '添加权限成功'
+      msg: '添加权限成功',
+      errorCode: 6
     });
   }
 );
@@ -275,7 +282,8 @@ admin.linPost(
     const v = await new DispatchPermissionsValidator().validate(ctx);
     await adminDao.dispatchPermissions(ctx, v);
     ctx.success({
-      msg: '添加权限成功'
+      msg: '添加权限成功',
+      errorCode: 7
     });
   }
 );
@@ -293,7 +301,8 @@ admin.linPost(
     const v = await new RemovePermissionsValidator().validate(ctx);
     await adminDao.removePermissions(ctx, v);
     ctx.success({
-      msg: '删除权限成功'
+      msg: '删除权限成功',
+      errorCode: 8
     });
   }
 );

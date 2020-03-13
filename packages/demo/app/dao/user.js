@@ -1,4 +1,4 @@
-import { RepeatException, generate, NotFound, Forbidden } from '@pedro/core';
+import { RepeatException, generate, NotFound, Forbidden } from 'lin-mizar';
 import { UserModel, UserIdentityModel, identityType } from '../models/user';
 import { UserGroupModel } from '../models/user-group';
 import { GroupPermissionModel } from '../models/group-permission';

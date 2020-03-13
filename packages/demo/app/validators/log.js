@@ -1,4 +1,4 @@
-import { Rule, checkDateFormat } from '@pedro/core';
+import { Rule, checkDateFormat } from 'lin-mizar';
 import { PaginateValidator } from './common';
 import { isOptional } from '../libs/util';
 

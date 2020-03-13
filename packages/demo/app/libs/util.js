@@ -1,5 +1,5 @@
 import { toSafeInteger, get, isInteger } from 'lodash';
-import { ParametersException } from '@pedro/core';
+import { ParametersException } from 'lin-mizar';
 
 function getSafeParamId (ctx) {
   const id = toSafeInteger(get(ctx.params, 'id'));

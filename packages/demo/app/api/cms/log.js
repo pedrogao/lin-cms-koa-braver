@@ -1,4 +1,4 @@
-import { LinRouter, NotFound } from '@pedro/core';
+import { LinRouter, NotFound } from 'lin-mizar';
 import { LogFindValidator } from '../../validators/log';
 import { PaginateValidator } from '../../validators/common';
 

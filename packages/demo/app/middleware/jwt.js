@@ -5,7 +5,7 @@ import {
   RefreshException,
   TokenType,
   routeMetaInfo
-} from '@pedro/core';
+} from 'lin-mizar';
 import { UserGroupModel } from '../models/user-group';
 import { GroupModel } from '../models/group';
 import { GroupPermissionModel } from '../models/group-permission';

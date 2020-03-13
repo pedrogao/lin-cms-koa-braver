@@ -1,4 +1,4 @@
-import { LinRouter, ParametersException } from '@pedro/core';
+import { LinRouter, ParametersException } from 'lin-mizar';
 
 import { loginRequired } from '../../middleware/jwt';
 import { LocalUploader } from '../../extensions/file/local-uploader';

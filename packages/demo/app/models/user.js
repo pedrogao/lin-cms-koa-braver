@@ -1,4 +1,4 @@
-import { NotFound, verify, AuthFailed, generate, Failed } from '@pedro/core';
+import { NotFound, verify, AuthFailed, generate, Failed } from 'lin-mizar';
 
 import sequelize from '../libs/db';
 import { Model, Sequelize } from 'sequelize';

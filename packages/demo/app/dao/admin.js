@@ -1,4 +1,4 @@
-import { NotFound, Forbidden } from '@pedro/core';
+import { NotFound, Forbidden } from 'lin-mizar';
 import { PermissionModel } from '../models/permission';
 import { UserModel, UserIdentityModel } from '../models/user';
 import { GroupModel } from '../models/group';

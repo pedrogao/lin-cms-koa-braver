@@ -1,4 +1,4 @@
-import { LinRouter, getTokens } from '@pedro/core';
+import { LinRouter, getTokens } from 'lin-mizar';
 import {
   RegisterValidator,
   LoginValidator,
@@ -35,7 +35,8 @@ user.linPost(
     const v = await new RegisterValidator().validate(ctx);
     await userDao.createUser(v);
     ctx.success({
-      msg: '用户创建成功'
+      msg: '注册成功',
+      errorCode: 9
     });
   }
 );
@@ -77,7 +78,8 @@ user.linPut(
     const v = await new UpdateInfoValidator().validate(ctx);
     await userDao.updateUser(ctx, v);
     ctx.success({
-      msg: '更新用户成功'
+      msg: '更新用户成功',
+      errorCode: 4
     });
   }
 );
@@ -100,7 +102,8 @@ user.linPut(
       v.get('body.new_password')
     );
     ctx.success({
-      msg: '密码修改成功'
+      msg: '密码修改成功',
+      errorCode: 2
     });
   }
 );

@@ -1,4 +1,4 @@
-import { HttpException } from '@pedro/core';
+import { HttpException } from 'lin-mizar';
 import assert from 'assert';
 import { isInteger } from 'lodash';
 

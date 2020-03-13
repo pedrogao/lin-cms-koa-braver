@@ -1,4 +1,4 @@
-import { LinValidator, Rule, config } from '@pedro/core';
+import { LinValidator, Rule, config } from 'lin-mizar';
 
 class PositiveIdValidator extends LinValidator {
   constructor () {

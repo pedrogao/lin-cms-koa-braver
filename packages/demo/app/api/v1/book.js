@@ -1,9 +1,4 @@
-import {
-  LinRouter,
-  NotFound,
-  groupRequired,
-  disableLoading
-} from '@pedro/core';
+import { LinRouter, NotFound, groupRequired, disableLoading } from 'lin-mizar';
 import {
   BookSearchValidator,
   CreateOrUpdateBookValidator
@@ -57,7 +52,8 @@ bookApi.post('/', async ctx => {
   const v = await new CreateOrUpdateBookValidator().validate(ctx);
   await bookDto.createBook(v);
   ctx.success({
-    msg: '新建图书成功'
+    msg: '新建图书成功',
+    errorCode: 10
   });
 });
 
@@ -66,7 +62,8 @@ bookApi.put('/:id', async ctx => {
   const id = getSafeParamId(ctx);
   await bookDto.updateBook(v, id);
   ctx.success({
-    msg: '更新图书成功'
+    msg: '更新图书成功',
+    errorCode: 11
   });
 });
 
@@ -84,7 +81,8 @@ bookApi.linDelete(
     const id = v.get('path.id');
     await bookDto.deleteBook(id);
     ctx.success({
-      msg: '删除图书成功'
+      msg: '删除图书成功',
+      errorCode: 12
     });
   }
 );

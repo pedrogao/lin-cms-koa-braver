@@ -1,4 +1,4 @@
-import { LinValidator, Rule } from '@pedro/core';
+import { LinValidator, Rule } from 'lin-mizar';
 
 class BookSearchValidator extends LinValidator {
   constructor () {

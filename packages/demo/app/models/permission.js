@@ -1,6 +1,6 @@
 import sequelize from '../libs/db';
 import { Model, Sequelize } from 'sequelize';
-import { routeMetaInfo } from '@pedro/core';
+import { routeMetaInfo } from 'lin-mizar';
 
 class Permission extends Model {
   toJSON () {

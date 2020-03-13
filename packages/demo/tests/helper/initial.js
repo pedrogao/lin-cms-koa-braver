@@ -1,4 +1,4 @@
-const { config } = require('@pedro/core');
+const { config } = require('lin-mizar/lin/config');
 
 // 初始化数据库配置
 // 初始化数据库配置

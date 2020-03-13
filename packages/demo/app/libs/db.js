@@ -1,4 +1,4 @@
-import { config } from '@pedro/core';
+import { config } from 'lin-mizar';
 import { Sequelize } from 'sequelize';
 
 /**

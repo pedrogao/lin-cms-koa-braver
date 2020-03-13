@@ -1,4 +1,4 @@
-import { Uploader, config } from '@pedro/core';
+import { Uploader, config } from 'lin-mizar';
 import { FileModel } from '../../models/file';
 import fs from 'fs';
 import path from 'path';

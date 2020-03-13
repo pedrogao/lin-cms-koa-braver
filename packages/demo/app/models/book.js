@@ -1,4 +1,4 @@
-import { InfoCrudMixin } from '@pedro/core';
+import { InfoCrudMixin } from 'lin-mizar';
 import { merge } from 'lodash';
 import { Sequelize, Model } from 'sequelize';
 import sequelize from '../libs/db';

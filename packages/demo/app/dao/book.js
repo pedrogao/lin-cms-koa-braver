@@ -1,4 +1,4 @@
-import { NotFound, Forbidden } from '@pedro/core';
+import { NotFound, Forbidden } from 'lin-mizar';
 import { Book } from '../models/book';
 import Sequelize from 'sequelize';
 

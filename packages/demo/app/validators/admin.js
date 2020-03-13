@@ -1,4 +1,4 @@
-import { Rule, LinValidator } from '@pedro/core';
+import { Rule, LinValidator } from 'lin-mizar';
 import { isOptional } from '../libs/util';
 import { PaginateValidator, PositiveIdValidator } from './common';
 import validator from 'validator';

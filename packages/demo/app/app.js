@@ -3,7 +3,7 @@ import KoaBodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import mount from 'koa-mount';
 import serve from 'koa-static';
-import { config, json, logging, success, jwt, Loader } from '@pedro/core';
+import { config, json, logging, success, jwt, Loader } from 'lin-mizar';
 import { PermissionModel } from './models/permission';
 
 /**
@@ -84,7 +84,7 @@ async function createApp () {
   applyBodyParse(app);
   applyCors(app);
   applyStatic(app);
-  const { log, error, Lin, multipart } = require('@pedro/core');
+  const { log, error, Lin, multipart } = require('lin-mizar');
   app.use(log);
   app.on('error', error);
   applyDefaultExtends(app);

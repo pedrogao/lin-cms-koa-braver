@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { routeMetaInfo, assert } from '@pedro/core';
+import { routeMetaInfo, assert } from 'lin-mizar';
 import { LogModel } from '../models/log';
 
 const REG_XP = /(?<=\{)[^}]*(?=\})/g;
