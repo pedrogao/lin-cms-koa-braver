@@ -5,7 +5,7 @@
   "main": "app/starter.js",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon",
-    "start:prod": "cross-env NODE_ENV=production node app/starter.js"
+    "start:prod": "cross-env NODE_ENV=production node index"
   },
   "keywords": [
     "lin",
